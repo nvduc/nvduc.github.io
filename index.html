@@ -1,1 +1,352 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>YouTube Shorts Swipe</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #shorts-container {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      border-radius: 16px;
+      position: fixed;
+      background: #000;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 32px rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .short {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: transform 0.4s ease;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="start-page" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:10000;">
+    <h1 style="color:#fff;margin-bottom:32px;">YouTube Shorts Measurement</h1>
+    <label style="color:#fff;font-size:1.2rem;margin-bottom:8px;" for="name-input">Your Name:</label>
+    <input id="name-input" type="text" style="font-size:1.2rem;padding:8px 12px;border-radius:8px;border:none;margin-bottom:20px;width:200px;">
+    <label style="color:#fff;font-size:1.2rem;margin-bottom:8px;" for="age-input">Your Age:</label>
+    <input id="age-input" type="number" min="1" max="120" style="font-size:1.2rem;padding:8px 12px;border-radius:8px;border:none;margin-bottom:20px;width:200px;">
+    <label style="color:#fff;font-size:1.2rem;margin-bottom:8px;" for="exp-input">Experience with short video services (years):</label>
+    <input id="exp-input" type="number" min="0" max="50" step="0.1" style="font-size:1.2rem;padding:8px 12px;border-radius:8px;border:none;margin-bottom:32px;width:200px;">
+    <button id="start-btn" style="font-size:2rem;padding:16px 48px;border-radius:12px;border:none;background:#ff0000;color:#fff;cursor:pointer;">Start</button>
+  </div>
+  <div id="shorts-container" style="display:none;">
+    <!-- Shorts will be injected here -->
+  </div>
+  <div id="finish-page" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:20001;flex-direction:column;justify-content:center;align-items:center;">
+    <h1 style="color:#fff;margin-bottom:32px;">Thank you for participating!</h1>
+    <p style="color:#fff;font-size:1.2rem;margin-bottom:32px;">You have finished watching all videos.</p>
+    <button id="download-log-btn-finish" style="font-size:1.2rem;padding:12px 32px;border-radius:8px;border:none;background:#222;color:#fff;cursor:pointer;">Download Log</button>
+  </div>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script>
+    // --- Logging utility ---
+    const logBuffer = [];
+    function logAndBuffer(...args) {
+      logBuffer.push(args.map(String).join(' '));
+      console.log(...args);
+    }
+
+    // --- Start page logic ---
+    const startPage = document.getElementById('start-page');
+    const shortsContainer = document.getElementById('shorts-container');
+    const downloadLogBtn = document.getElementById('download-log-btn');
+    const finishPage = document.getElementById('finish-page');
+    const downloadLogBtnFinish = document.getElementById('download-log-btn-finish');
+    let userName = ""; // Store user name for log file
+
+    document.getElementById('start-btn').onclick = function() {
+      // Get name, age and experience values
+      const name = document.getElementById('name-input').value;
+      const age = document.getElementById('age-input').value;
+      const exp = document.getElementById('exp-input').value;
+      userName = name || "user";
+      logAndBuffer('User Name:', name);
+      logAndBuffer('User Age:', age);
+      logAndBuffer('Experience (years):', exp);
+      startPage.style.display = 'none';
+      shortsContainer.style.display = '';
+      // downloadLogBtn.style.display = '';
+
+      // Start playing the first video
+      const firstIframe = shorts[0].querySelector('iframe');
+      firstIframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+      playStart = Date.now(); // <-- Reset playStart when first video starts
+    };
+
+    function handleSwipe(deltaY) {
+      if (isTouch) {
+        deltaY = -deltaY;
+      } else if (mouseDown) {
+        deltaY = -deltaY;
+      }
+      if (Math.abs(deltaY) > 5) {
+        if (deltaY < 0 && currentIndex < shorts.length - 1) {
+          logPlayTime(currentIndex);
+          currentIndex++;
+          updateShorts();
+          // If now at last video, do nothing special yet
+        } else if (deltaY > 0 && currentIndex > 0) {
+          logPlayTime(currentIndex);
+          currentIndex--;
+          updateShorts();
+        } else if (deltaY < 0 && currentIndex === shorts.length - 1) {
+          // User tries to swipe past the last video: log last play time and show finish
+          logPlayTime(currentIndex);
+          showFinishPage();
+        }
+      }
+    }
+
+    function showFinishPage() {
+      shortsContainer.style.display = 'none';
+      finishPage.style.display = 'flex';
+      // Mute all videos after the last video
+      shorts.forEach((short, idx) => {
+        const iframe = short.querySelector('iframe');
+        iframe.contentWindow.postMessage('{"event":"command","func":"mute","args":""}', '*');
+      });
+      // Log last video's play time if not already logged
+      // (If user closes tab, beforeunload will also log)
+    }
+
+    downloadLogBtnFinish.onclick = function() {
+      const safeName = userName.replace(/[^a-zA-Z0-9_\-]/g, "_");
+      const blob = new Blob([logBuffer.join('\n')], {type: 'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `log_${safeName}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    // downloadLogBtnFinish.onclick = downloadLogBtn.onclick;
+
+    // --- Video IDs list ---
+    // const videoIds = [ß
+    //   "alhQosN8h7M",
+    //   "HtOJT_yxj9g",
+    //   "YTwK96HddCo",
+    //   "dpswBBrgLqY"
+    // ];
+
+const videoIds = [
+  "K6sKuNEBsDY",
+  "sHzoPSfftDI",
+  "z54dsDX_Z4s",
+  "HCY4m24azmQ",
+  "zgKEiCq9QhQ",
+  "oJ5xHDmLx4c",
+  "Bd4VgAwR_BU",
+  "kY_C86pkjFc",
+  "VfuTqvwiCbs",
+  "HcekYr_G3oU",
+  "qyCYXNFJnVg",
+  "B7wipn878js",
+  "mc6ddhp1lAA",
+  "XCHeFnJex-o",
+  "SZiWWuAm-NM",
+  "7c92oy4jCKs",
+  "dwBSkcyuSOU",
+  "221Xw_JituE",
+  "p2zf1eFMI3o",
+  "MiA2DpsTYRs",
+  "P8IhqRB7NR0",
+  "TVIlxdQlqew",
+  "zlpj5VJqZAo",
+  "BpxcnqhlsTs",
+  "EM0SYQEwiKE",
+  "3uoUGMdC6pQ",
+  "G-IbLMmHFck",
+  "3DxtwpHFlrE",
+  "8B6H7iMToxA",
+  "tK3YKhe36c4",
+  "C9YC1NIAn0w",
+  "CJ_st99ZkDU",
+  "4Is8Ut2CwuQ",
+  "9ZL6TdtbGbw",
+  "5Uuj-IF2RP0",
+  "hs2iI1F5pT4",
+  "A8pXb5ttPZ0",
+  "OBjId83z-Hg",
+  "_R7t590DMas",
+  "dYFMzU0VVYI",
+  "PvijjKeOMHc",
+  "Jd55AfGCXEo",
+  "3gxWOnfUWLE",
+  "L0eUh8Cv3dI",
+  "moYBT8zG5E4",
+  "Zpo4iHNu7mk",
+  "n8a30x7Kv1Y",
+  "IUusdPiJ5qo",
+  "8s4bJw4RLAE",
+  "mSjJh8IWycU"
+];
+    // --- Dynamically create shorts iframes ---
+    // const shortsContainer = document.getElementById('shorts-container');
+    shortsContainer.innerHTML = videoIds.map((id, idx) => `
+      <div class="short" style="transform: translateY(${idx * 100}%);">
+        <iframe id="ytplayer${idx}" src="https://www.youtube.com/embed/${id}?autoplay=1&mute=0&controls=0&loop=1&enablejsapi=1"
+          allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+    `).join('');
+
+    const shorts = document.querySelectorAll('.short');
+    let currentIndex = 0;
+    let startY = 0;
+    let isTouch = false;
+
+    // --- Play time tracking ---
+    const playTimes = Array(shorts.length).fill(0); // ms
+    let playStart = Date.now();
+
+    function logPlayTime(index) {
+      const now = Date.now();
+      playTimes[index] += now - playStart;
+      logAndBuffer(
+        `Video ${index} (ID: ${videoIds[index]}) play time: ${playTimes[index] / 1000}s`
+      );
+      playStart = now;
+    }
+
+    // --- Log video duration ---
+    let ytPlayers = [];
+    function onYouTubeIframeAPIReady() {
+      shorts.forEach((short, i) => {
+        const iframe = short.querySelector('iframe');
+        ytPlayers[i] = new YT.Player(iframe.id, {
+          events: {
+            'onReady': (event) => {
+              const duration = event.target.getDuration();
+              logAndBuffer(
+                `Video ${i} (ID: ${videoIds[i]}) duration: ${duration}s`
+              );
+            },
+            'onStateChange': (event) => {
+              // 0 = ended, 1 = playing, 2 = paused
+              if (event.data === YT.PlayerState.ENDED) {
+                // Loop: restart video from beginning
+                event.target.seekTo(0);
+                event.target.playVideo();
+              }
+            }
+          }
+        });
+      });
+    }
+
+    // --- Touch events (mobile & touchpad) ---
+    document.addEventListener('touchstart', (e) => {
+      logAndBuffer('Touch start detected');
+      isTouch = true;
+      startY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      if (!isTouch) return;
+      const endY = e.changedTouches[0].clientY;
+      handleSwipe(endY - startY);
+    });
+
+    // Mouse events (touchpad swipe)
+    let mouseDown = false;
+    let mouseStartY = 0;
+    document.addEventListener('mousedown', (e) => {
+      isTouch = false;
+      mouseDown = true;
+      mouseStartY = e.clientY;
+    });
+
+    document.addEventListener('mouseup', (e) => {
+      if (!mouseDown) return;
+      mouseDown = false;
+      const deltaY = e.clientY - mouseStartY;
+      handleSwipe(deltaY);
+    });
+
+    // Wheel event (for touchpad two-finger swipe)
+    // Listen on both window and document for best compatibility
+    window.addEventListener('wheel', onWheel, { passive: false });
+    document.addEventListener('wheel', onWheel, { passive: false });
+
+    function onWheel(e) {
+      // Prevent default to ensure event is handled
+      e.preventDefault();
+      console.log('Wheel event detected:', e.deltaY, e.deltaX);
+      // Only vertical scroll
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX) && Math.abs(e.deltaY) > 5) {
+        handleSwipe(e.deltaY);
+      }
+    }
+
+    // Keyboard events for up/down arrow keys
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        // logAndBuffer('ArrowDown key pressed');
+        handleSwipe(-100); // Simulate swipe up
+      } else if (e.key === 'ArrowUp') {
+        // logAndBuffer('ArrowUp key pressed');
+        handleSwipe(100); // Simulate swipe down
+      }
+    });
+
+    function updateShorts() {
+      shorts.forEach((short, index) => {
+        short.style.transform = `translateY(${(index - currentIndex) * 100}%)`;
+        const iframe = short.querySelector('iframe');
+        if (index === currentIndex) {
+          // Restart playback from the beginning if in view
+          iframe.contentWindow.postMessage('{"event":"command","func":"seekTo","args":[0, true]}', '*');
+          iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        } else {
+          iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        }
+      });
+      playStart = Date.now();
+    }
+
+    // Log play time when user leaves the page or finish page is shown
+    window.addEventListener('beforeunload', () => {
+      logPlayTime(currentIndex);
+      playTimes.forEach((t, i) => {
+        logAndBuffer(`Final Video ${i} play time: ${t / 1000}s`);
+      });
+    });
+
+    // Also log last play time when finish page is shown (in case user doesn't swipe past last video)
+    finishPage.addEventListener('show', () => {
+      logPlayTime(currentIndex);
+      playTimes.forEach((t, i) => {
+        logAndBuffer(`Final Video ${i} play time: ${t / 1000}s`);
+      });
+    });
+  </script>
+</body>
+</html>
