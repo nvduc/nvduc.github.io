@@ -199,6 +199,8 @@
           controls 
           playsinline 
           preload="auto"
+          autoplay
+          muted
           style="width:100%;height:100%;background:#000;object-fit:cover;"
         ></video>
         <div style="position:absolute;bottom:16px;left:16px;color:#fff;font-size:1.2rem;text-shadow:0 0 8px #000;">${video.title}</div>
@@ -283,6 +285,7 @@
         const video = short.querySelector('video');
         if (index === currentIndex) {
           video.currentTime = 0;
+          video.muted = true; // ← 追加
           video.play();
         } else {
           video.pause();
