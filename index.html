@@ -268,9 +268,9 @@
       if (isTouch) return; // Ignore wheel events during touch interactions
       if (mouseDown) return; // Ignore wheel events during mouse drag
       e.preventDefault(); // Prevent default scrolling behavior
-      if(e.deltaY < -5) {
+      if(e.deltaY < -50) {
         handleSwipe(100); // Simulate swipe up
-      } else if(e.deltaY > 5) {
+      } else if(e.deltaY > 50) {
         handleSwipe(-100); // Simulate swipe down
       }
     }, { passive: false });
