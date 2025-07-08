@@ -233,7 +233,14 @@
     document.addEventListener('touchend', (e) => {
       if (!isTouch) return;
       const endY = e.changedTouches[0].clientY;
-      handleSwipe(endY - startY);
+      if(endY - startY > 0) {
+        handleSwipe(100);
+        logAndBuffer('Swipe down detected');
+      } else {
+         handleSwipe(-100);
+        logAndBuffer('Swipe up detected');
+      }
+      
     });
 
     // Mouse events (touchpad swipe)
