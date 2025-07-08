@@ -262,9 +262,9 @@
 
     // Wheel event (for mouse scroll/touchpad swipe)
     document.addEventListener('wheel', function(e) {
-      if(e.deltaY < 0) {
+      if(e.deltaY < -5) {
         handleSwipe(100); // Simulate swipe up
-      } else if(e.deltaY > 0) {
+      } else if(e.deltaY > 5) {
         handleSwipe(-100); // Simulate swipe down
       }
     }, { passive: false });
