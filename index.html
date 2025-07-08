@@ -264,16 +264,21 @@
 
     
     // Wheel event (for mouse scroll/touchpad swipe)
+    let wheelLocked = false;
     document.addEventListener('wheel', function(e) {
       console.log('Wheel event detected:', e.deltaY);
       if (isTouch) return; // Ignore wheel events during touch interactions
       if (mouseDown) return; // Ignore wheel events during mouse drag
-      
-      if(e.deltaY < -50) {
+      if (wheelLocked) return; // 連続スクロール防止
+      if(e.deltaY < -20) {
         handleSwipe(100); // Simulate swipe up
+        wheelLocked = true;
+        setTimeout(() => { wheelLocked = false; }, 400); // 0.4秒ロック
         e.preventDefault(); // Prevent default scrolling behavior
-      } else if(e.deltaY > 50) {
+      } else if(e.deltaY > 20) {
         handleSwipe(-100); // Simulate swipe down
+        wheelLocked = true;
+        setTimeout(() => { wheelLocked = false; }, 400); // 0.4秒ロック
         e.preventDefault(); // Prevent default scrolling behavior
       }
     }, { passive: false });
