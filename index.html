@@ -298,13 +298,18 @@
         const video = short.querySelector('video');
         if (index === currentIndex) {
           video.currentTime = 0;
-          video.muted = false; // ← 追加
+          video.muted = true; // ← 追加
           video.play();
+          video.onclick = () => {
+            video.muted = false;
+            video.play();
+          };
           const clickEvent = new Event('click', { bubbles: true, cancelable: true });
           video.dispatchEvent(clickEvent);
         } else {
           video.pause();
           video.currentTime = 0;
+          video.onclick = null;
         }
       });
       playStart = Date.now();
