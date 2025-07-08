@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YouTube Shorts Swipe</title>
   <style>
     html, body {
@@ -9,15 +10,14 @@
       padding: 0;
       background-color: #000;
       width: 100vw;
-      height: 100vh;
+      height: 100dvh; /* ← ここを修正 */
       overflow: hidden;
     }
     #shorts-container {
-      /* 画面の高さに合わせてアスペクト比9:16で幅を自動計算 */
-      height: 100vh;
-      width: calc(100vh * 9 / 16);
+      height: 100dvh; /* ← ここも修正 */
+      width: calc(100dvh * 9 / 16);
       max-width: 100vw;
-      max-height: 100vh;
+      max-height: 100dvh;
       overflow: hidden;
       border-radius: 16px;
       position: fixed;
