@@ -285,7 +285,7 @@
         const video = short.querySelector('video');
         if (index === currentIndex) {
           video.currentTime = 0;
-          video.muted = true; // ← 追加
+          video.muted = false; // ← 追加
           video.play();
         } else {
           video.pause();
