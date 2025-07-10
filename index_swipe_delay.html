@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swipe Delay Evaluation</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      width: 100vw;
+      height: 100dvh; /* ← ここを修正 */
+      overflow: hidden;
+    }
+    #shorts-container {
+      height: 100dvh; /* ← ここも修正 */
+      width: calc(100dvh * 9 / 16);
+      max-width: 100vw;
+      max-height: 100dvh;
+      overflow: hidden;
+      border-radius: 16px;
+      position: fixed;
+      background: #000;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 32px rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .short, video {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      border: none;
+      top: 0;
+      left: 0;
+      transition: transform 0.4s ease;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+      object-fit: cover;
+      display: block;
+    }
+    /* html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #shorts-container {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      border-radius: 16px;
+      position: fixed;
+      background: #000;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 32px rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .short {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: transform 0.4s ease;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #000;
+      display: block;
+    }  */
+  </style>
+</head>
+<body>
+  <div id="start-page" style="position:fixed;inset:0;width:100vw;height:100dvh;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:10000;">
+    <h1 style="color:#fff;margin-bottom:32px;">Swipe Delay Impact Evaluation</h1>
+    <!-- ★ 追加テキストここから -->
+    <div style="color:#fff;font-size:1.1rem;max-width:90vw;margin-bottom:32px;line-height:1.7;text-align:left;">
+      <b>Welcome to the evaluation!</b><br>
+      This evaluation aims to measure the impact of swipe delay on Quality of Experience in short video service. During the evaluation, you will watch multiple sessions, each consists of 10 short videos. You can go to next/previous video anytime by using mouse's scrolling or up/down keys on your keyboard. At the end of each session, you will be asked to rate the overall Quality of Experience (QoE) on a 5-point scale: 1 (Bad), 2 (Poor), 3 (Fair), 4 (Good), 5 (Excellent).<br>
+      Totally, you will watch 20 sessions, and each session will have a different delay pattern. The evaluation will take approximately 10 minutes.
+      <br><br>
+      After the evaluation, please download the log file that contains your name, age, experience with short video services, and your ratings for each session. Then upload the log file to the following url:<br>
+      <a href="https://drive.google.com/drive/folders/1gcJidjtfxKTOjakc0fy3BrnshTZIS3BV?usp=sharing" target="_blank" style="color:#4af;text-decoration:underline;">
+        https://drive.google.com/drive/folders/1gcJidjtfxKTOjakc0fy3BrnshTZIS3BV?usp=sharing
+      </a>
+      <!-- (Upload URL will be provided after the experiment) -->
+      <br>
+    </div>
+    <!-- ★ 追加テキストここまで -->
+    <label style="color:#fff;font-size:1.2rem;margin-bottom:8px;" for="name-input">Your Name:</label>
+    <input id="name-input" type="text" style="font-size:1.2rem;padding:8px 12px;border-radius:8px;border:none;margin-bottom:20px;width:200px;">
+    <label style="color:#fff;font-size:1.2rem;margin-bottom:8px;" for="age-input">Your Age:</label>
+    <input id="age-input" type="number" min="1" max="120" style="font-size:1.2rem;padding:8px 12px;border-radius:8px;border:none;margin-bottom:20px;width:200px;">
+    <label style="color:#fff;font-size:1.2rem;margin-bottom:8px;" for="exp-input">Experience with short video services (years):</label>
+    <input id="exp-input" type="number" min="0" max="50" step="0.1" style="font-size:1.2rem;padding:8px 12px;border-radius:8px;border:none;margin-bottom:32px;width:200px;">
+    <button id="start-btn" style="font-size:2rem;padding:16px 48px;border-radius:12px;border:none;background:#ff0000;color:#fff;cursor:pointer;">Start</button>
+  </div>
+  <div id="shorts-container" style="display:none;">
+    <!-- Shorts will be injected here -->
+  </div>
+  <div id="finish-page" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:20001;flex-direction:column;justify-content:center;align-items:center;">
+    <h1 style="color:#fff;margin-bottom:32px;">Thank you for participating!</h1>
+    <p style="color:#fff;font-size:1.2rem;margin-bottom:32px;">You have finished watching all videos.</p>
+    <button id="download-log-btn-finish" style="font-size:1.2rem;padding:12px 32px;border-radius:8px;border:none;background:#222;color:#fff;cursor:pointer;">Download Log</button>
+    <div style="margin-top:32px;color:#fff;font-size:1.1rem;text-align:center;">
+      Please upload your downloaded log file to:<br>
+      <a href="https://drive.google.com/drive/folders/1gcJidjtfxKTOjakc0fy3BrnshTZIS3BV?usp=sharing" target="_blank" style="color:#4af;text-decoration:underline;">
+        https://drive.google.com/drive/folders/1gcJidjtfxKTOjakc0fy3BrnshTZIS3BV?usp=sharing
+      </a>
+    </div>
+  </div>
+  <!-- ★ 評価ページを追加 -->
+<div id="score-page" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:20002;flex-direction:column;justify-content:center;align-items:center;">
+  <h1 style="color:#fff;margin-bottom:32px;">動画の品質評価</h1>
+  <p style="color:#fff;font-size:1.2rem;margin-bottom:24px;">最後に、全体の動画品質を5段階ACR（Absolute Category Rating）で評価してください。</p>
+  <form id="score-form" style="color:#fff;font-size:1.2rem;display:flex;flex-direction:column;align-items:center;">
+    <label><input type="radio" name="acr" value="5" required> 5: Excellent (非常に良い)</label>
+    <label><input type="radio" name="acr" value="4"> 4: Good (良い)</label>
+    <label><input type="radio" name="acr" value="3"> 3: Fair (普通)</label>
+    <label><input type="radio" name="acr" value="2"> 2: Poor (悪い)</label>
+    <label><input type="radio" name="acr" value="1"> 1: Bad (非常に悪い)</label>
+    <button type="submit" style="margin-top:24px;font-size:1.2rem;padding:12px 32px;border-radius:8px;border:none;background:#222;color:#fff;cursor:pointer;">送信</button>
+  </form>
+</div>
+
+  <script>
+    // --- Logging utility ---
+    const logBuffer = [];
+    function logAndBuffer(...args) {
+      logBuffer.push(args.map(String).join(' '));
+      console.log(...args);
+    }
+
+    // --- Start page logic ---
+    const startPage = document.getElementById('start-page');
+    const shortsContainer = document.getElementById('shorts-container');
+    const finishPage = document.getElementById('finish-page');
+    const downloadLogBtnFinish = document.getElementById('download-log-btn-finish');
+    let userName = ""; // Store user name for log file
+
+    document.getElementById('start-btn').onclick = function() {
+      // Get name, age and experience values
+      const name = document.getElementById('name-input').value;
+      const age = document.getElementById('age-input').value;
+      const exp = document.getElementById('exp-input').value;
+      userName = name || "user";
+      logAndBuffer('User Name:', name);
+      logAndBuffer('User Age:', age);
+      logAndBuffer('Experience (years):', exp);
+      startPage.style.display = 'none';
+      shortsContainer.style.display = '';
+      // Start playing the first video
+      playStart = Date.now();
+      updateShorts();
+    };
+
+    // 各動画ごとにカスタム遅延（ミリ秒）を設定
+// 各ラウンドごと・各動画ごとのカスタム遅延（例: 3ラウンド×4動画）
+let VIDEO_SWITCH_DELAYS = [];
+const DEFAULT_DELAY = 1000;
+let delaysLoaded = false;
+
+// CSVファイルを読み込む関数（行単位でランダム並び替え、各行の内容はそのまま）
+function loadDelaysFromCSV(csvUrl, callback) {
+  fetch(csvUrl)
+    .then(response => response.text())
+    .then(text => {
+      // CSVを2次元配列に変換
+      VIDEO_SWITCH_DELAYS = text.trim().split('\n').map(row =>
+        row.split(',').map(cell => Number(cell.trim()) || 0)
+      );
+      // 行（ラウンド）のみをランダムに並び替え、各行の内容はそのまま
+      VIDEO_SWITCH_DELAYS = shuffleArray(VIDEO_SWITCH_DELAYS);
+      delaysLoaded = true;
+      if (callback) callback();
+    })
+    .catch(err => {
+      console.error('Failed to load delay CSV:', err);
+      delaysLoaded = true;
+      if (callback) callback();
+    });
+}
+
+// 配列（行）をランダムに並び替える関数（Fisher-Yatesアルゴリズム）
+function shuffleArray(array) {
+  const arr = array.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+let EVALUATION_REPEAT = 1; // CSVロード後に上書き
+let evaluationCount = 0;
+
+function getCurrentDelay() {
+  // currentIndexが範囲外の場合はデフォルト値
+  //return VIDEO_SWITCH_DELAYS[currentIndex] || 1000;
+
+  // ラウンドと動画インデックスで遅延を取得
+  const round = evaluationCount;
+  if (
+    VIDEO_SWITCH_DELAYS[round] &&
+    typeof VIDEO_SWITCH_DELAYS[round][currentIndex] === 'number'
+  ) {
+    return VIDEO_SWITCH_DELAYS[round][currentIndex];
+  }
+  return DEFAULT_DELAY;
+}
+loadDelaysFromCSV('delay_partern.csv', () => {
+  EVALUATION_REPEAT = VIDEO_SWITCH_DELAYS.length || 1;
+});
+    // handleSwipe内で次の動画・前の動画へ切り替える際に遅延を追加
+    function handleSwipe(deltaY) {
+      if (isTouch) {
+        deltaY = -deltaY;
+      } else if (mouseDown) {
+        deltaY = -deltaY;
+      }
+      if (Math.abs(deltaY) > 5) {
+        if (deltaY < 0 && currentIndex < shorts.length - 1) {
+          logPlayTime(currentIndex);
+          currentIndex++;
+          setTimeout(updateShorts, getCurrentDelay()); // 各動画ごとの遅延
+        } else if (deltaY > 0 && currentIndex > 0) {
+          logPlayTime(currentIndex);
+          currentIndex--;
+          setTimeout(updateShorts, getCurrentDelay()); // 各動画ごとの遅延
+        } else if (deltaY < 0 && currentIndex === shorts.length - 1) {
+          logPlayTime(currentIndex);
+          setTimeout(showFinishPage, getCurrentDelay()); // 各動画ごとの遅延
+        }
+      }
+    }
+
+
+
+// 再生・評価サイクルをリセットして再スタート
+function restartPlayback() {
+  currentIndex = 0;
+  playTimes.fill(0);
+  shortsContainer.style.display = '';
+  finishPage.style.display = 'none';
+  scorePage.style.display = 'none';
+  playStart = Date.now();
+  updateShorts();
+}
+
+// finishPageの代わりにスコアページを表示
+function showFinishPage() {
+  shortsContainer.style.display = 'none';
+  scorePage.style.display = 'flex';
+  // Pause all videos
+  shorts.forEach((short, idx) => {
+    const video = short.querySelector('video');
+    video.pause();
+  });
+  // 評価タイトル更新
+  scorePage.querySelector('h1').textContent = `動画の品質評価 (${evaluationCount + 1}回目)`;
+}
+
+// スコアページ送信処理
+const scorePage = document.getElementById('score-page');
+const scoreForm = document.getElementById('score-form');
+scoreForm.onsubmit = function(e) {
+  e.preventDefault();
+  const acr = scoreForm.elements['acr'].value;
+
+  // ★ 各評価ごとに遅延パターンをログに記録
+  if (
+    Array.isArray(VIDEO_SWITCH_DELAYS[evaluationCount]) &&
+    VIDEO_SWITCH_DELAYS[evaluationCount].length > 0
+  ) {
+    logAndBuffer(
+      `Delay pattern [${evaluationCount + 1}回目]:`,
+      VIDEO_SWITCH_DELAYS[evaluationCount].join(',')
+    );
+  }
+
+  evaluationCount++;
+  logAndBuffer(`ACR Score [${evaluationCount}]:`, acr);
+  scoreForm.reset();
+
+  if (evaluationCount < EVALUATION_REPEAT) {
+    // もう一度再生＋評価サイクル
+    restartPlayback();
+  } else {
+    // 全サイクル終了でサンクスページ
+    scorePage.style.display = 'none';
+    finishPage.style.display = 'flex';
+    scorePage.querySelector('h1').textContent = '動画の品質評価';
+  }
+};
+
+    downloadLogBtnFinish.onclick = function() {
+  const safeName = userName.replace(/[^a-zA-Z0-9_\-]/g, "_");
+  // 現在日時をYYYYMMDD_HHMMSS形式で取得
+  const now = new Date();
+  const pad = n => n.toString().padStart(2, '0');
+  const dateStr = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+  const blob = new Blob([logBuffer.join('\n')], {type: 'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `log_${safeName}_${dateStr}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+    // --- Video file list (replace with your server video URLs) ---
+    const videoList = [
+      { title: "Video 1", src: "videos/v1.mp4" },
+      { title: "Video 2", src: "videos/v2.mp4" },
+      { title: "Video 3", src: "videos/v3.mp4" },
+      { title: "Video 4", src: "videos/v4.mp4" },
+      { title: "Video 5", src: "videos/v5.mp4" },
+      { title: "Video 6", src: "videos/v6.mp4" },
+      { title: "Video 7", src: "videos/v7.mp4" },
+      { title: "Video 8", src: "videos/v8.mp4" },
+      { title: "Video 9", src: "videos/v9.mp4" },
+      { title: "Video 10", src: "videos/v10.mp4" }
+      // Add more videos as needed
+    ];
+
+    // --- Dynamically create shorts video elements ---
+    shortsContainer.innerHTML = videoList.map((video, idx) => `
+      <div class="short" style="transform: translateY(${idx * 100}%);">
+        <video 
+          src="${video.src}" 
+          controls 
+          playsinline 
+          preload="auto"
+          autoplay
+          muted
+          style="width:100%;height:100%;background:#000;object-fit:cover;"
+        ></video>
+        <div style="position:absolute;bottom:16px;left:16px;color:#fff;font-size:1.2rem;text-shadow:0 0 8px #000;">${video.title}</div>
+      </div>
+    `).join('');
+
+    const shorts = document.querySelectorAll('.short');
+    let currentIndex = 0;
+    let startY = 0;
+    let isTouch = false;
+
+    // --- Play time tracking ---
+    const playTimes = Array(shorts.length).fill(0); // ms
+    let playStart = Date.now();
+
+    function logPlayTime(index) {
+      const now = Date.now();
+      playTimes[index] += now - playStart;
+      logAndBuffer(
+        `Video ${index} (${videoList[index].src}) play time: ${playTimes[index] / 1000}s`
+      );
+      playStart = now;
+    }
+
+    // --- Touch events (mobile & touchpad) ---
+    document.addEventListener('touchstart', (e) => {
+      // スタートページまたはフィニッシュページが表示中は何もしない
+      if (startPage.style.display !== "none" || finishPage.style.display !== "none") return;
+      console.log('Touch start detected:', e.touches[0].clientY);
+      logAndBuffer('Touch start detected');
+      isTouch = true;
+      startY = e.touches[0].clientY;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      if (startPage.style.display !== "none" || finishPage.style.display !== "none") return;
+      console.log('Touch end detected:', e.changedTouches[0].clientY);
+      if (!isTouch) return;
+      const endY = e.changedTouches[0].clientY;
+      if(endY - startY > 0) {
+        handleSwipe(100);
+        logAndBuffer('Swipe down detected');
+      } else {
+        handleSwipe(-100);
+        logAndBuffer('Swipe up detected');
+      }
+    });
+
+    // Mouse events (touchpad swipe)
+    let mouseDown = false;
+    let mouseStartY = 0;
+    document.addEventListener('mousedown', (e) => {
+      if (startPage.style.display !== "none" || finishPage.style.display !== "none") return;
+      isTouch = false;
+      mouseDown = true;
+      mouseStartY = e.clientY;
+    });
+
+    document.addEventListener('mouseup', (e) => {
+      if (startPage.style.display !== "none" || finishPage.style.display !== "none") return;
+      if (!mouseDown) return;
+      mouseDown = false;
+      const deltaY = e.clientY - mouseStartY;
+      handleSwipe(deltaY);
+    });
+
+    
+    // Wheel event (for mouse scroll/touchpad swipe)
+    let wheelLocked = false;
+    document.addEventListener('wheel', function(e) {
+      if (startPage.style.display !== "none" || finishPage.style.display !== "none") return;
+      console.log('Wheel event detected:', e.deltaY);
+      if (isTouch) return; // Ignore wheel events during touch interactions
+      if (mouseDown) return; // Ignore wheel events during mouse drag
+      if (wheelLocked) return; // 連続スクロール防止
+      if(e.deltaY < -20) {
+        handleSwipe(100); // Simulate swipe up
+        wheelLocked = true;
+        setTimeout(() => { wheelLocked = false; }, 400); // 0.4秒ロック
+        e.preventDefault(); // Prevent default scrolling behavior
+      } else if(e.deltaY > 20) {
+        handleSwipe(-100); // Simulate swipe down
+        wheelLocked = true;
+        setTimeout(() => { wheelLocked = false; }, 400); // 0.4秒ロック
+        e.preventDefault(); // Prevent default scrolling behavior
+      }
+    }, { passive: false });
+
+    // Keyboard events for up/down arrow keys
+    document.addEventListener('keydown', (e) => {
+      if (startPage.style.display !== "none" || finishPage.style.display !== "none") return;
+      if (e.key === 'ArrowDown') {
+        handleSwipe(-100); // Simulate swipe up
+      } else if (e.key === 'ArrowUp') {
+        handleSwipe(100); // Simulate swipe down
+      }
+    });
+
+    function updateShorts() {
+      // スタートページまたはフィニッシュページが表示中は再生しない
+      if (
+        startPage.style.display !== "none" ||
+        finishPage.style.display !== "none"
+      ) {
+        shorts.forEach((short, index) => {
+          const video = short.querySelector('video');
+          video.pause();
+          video.currentTime = 0;
+          video.onclick = null;
+        });
+        return;
+      }
+
+      shorts.forEach((short, index) => {
+        short.style.transform = `translateY(${(index - currentIndex) * 100}%)`;
+        const video = short.querySelector('video');
+        if (index === currentIndex) {
+          video.currentTime = 0;
+          video.muted = true;
+          video.play();
+          video.onclick = () => {
+            video.muted = false;
+            video.play();
+          };
+          const clickEvent = new Event('click', { bubbles: true, cancelable: true });
+          video.dispatchEvent(clickEvent);
+        } else {
+          video.pause();
+          video.currentTime = 0;
+          video.onclick = null;
+        }
+      });
+      playStart = Date.now();
+    }
+
+    // Log play time when user leaves the page or finish page is shown
+    window.addEventListener('beforeunload', () => {
+      logPlayTime(currentIndex);
+      playTimes.forEach((t, i) => {
+        logAndBuffer(`Final Video ${i} play time: ${t / 1000}s`);
+      });
+    });
+
+    finishPage.addEventListener('show', () => {
+      logPlayTime(currentIndex);
+      playTimes.forEach((t, i) => {
+        logAndBuffer(`Final Video ${i} play time: ${t / 1000}s`);
+      });
+    });
+
+  </script>
+</body>
+</html>
