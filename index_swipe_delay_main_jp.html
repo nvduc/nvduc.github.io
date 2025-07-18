@@ -202,8 +202,8 @@ let VIDEO_SWITCH_DELAYS = [
 ];
 const DEFAULT_DELAY = 1000;
 let delaysLoaded = true;
-//let EVALUATION_REPEAT = VIDEO_SWITCH_DELAYS.length || 1; // デフォルト値を設定
-let EVALUATION_REPEAT = 2; // デフォルト値を設定
+let EVALUATION_REPEAT = VIDEO_SWITCH_DELAYS.length || 1; // デフォルト値を設定
+//let EVALUATION_REPEAT = 2; // デフォルト値を設定
 console.log('EVALUATION_REPEAT:', EVALUATION_REPEAT);
 // CSVファイルを読み込む関数（行単位でランダム並び替え、各行の内容はそのまま）
 function loadDelaysFromCSV(csvUrl, callback) {
