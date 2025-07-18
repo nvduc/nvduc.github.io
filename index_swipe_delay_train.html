@@ -144,7 +144,7 @@
     <label><input type="radio" name="acr" value="3"> 3: Fair</label>
     <label><input type="radio" name="acr" value="2"> 2: Poor</label>
     <label><input type="radio" name="acr" value="1"> 1: Bad</label>
-    <button type="submit" style="margin-top:24px;font-size:1.2rem;padding:12px 32px;border-radius:8px;border:none;background:#ce0909;color:#fff;cursor:pointer;">Next Test</button>
+    <button id="next-btn" type="submit" style="margin-top:24px;font-size:1.2rem;padding:12px 32px;border-radius:8px;border:none;background:#ce0909;color:#fff;cursor:pointer;">Next Test</button>
   </form>
 </div>
 
@@ -162,6 +162,270 @@
     const finishPage = document.getElementById('finish-page');
     const downloadLogBtnFinish = document.getElementById('download-log-btn-finish');
     let userName = ""; // Store user name for log file
+
+    let evaluationCount = 0;
+    var video_path = "video_JP/"
+// --- Video file list (replace with your server video URLs) ---
+    const videoList = [
+  { title: "Video 1", src: video_path+"1.mp4" },
+  { title: "Video 2", src: video_path + "2.mp4" },
+  { title: "Video 3", src: video_path + "3.mp4" },
+  { title: "Video 4", src: video_path + "4.mp4" },
+  { title: "Video 5", src: video_path + "5.mp4" },
+  { title: "Video 6", src: video_path + "6.mp4" },
+  { title: "Video 7", src: video_path + "7.mp4" },
+  { title: "Video 8", src: video_path + "8.mp4" },
+  { title: "Video 9", src: video_path + "9.mp4" },
+  { title: "Video 10", src: video_path + "10.mp4" },
+  { title: "Video 11", src: video_path + "11.mp4" },
+  { title: "Video 12", src: video_path + "12.mp4" },
+  { title: "Video 13", src: video_path + "13.mp4" },
+  { title: "Video 14", src: video_path + "14.mp4" },
+  { title: "Video 15", src: video_path + "15.mp4" },
+  { title: "Video 16", src: video_path + "16.mp4" },
+  { title: "Video 17", src: video_path + "17.mp4" },
+  { title: "Video 18", src: video_path + "18.mp4" },
+  { title: "Video 19", src: video_path + "19.mp4" },
+  { title: "Video 20", src: video_path + "20.mp4" },
+  { title: "Video 21", src: video_path + "21.mp4" },
+  { title: "Video 22", src: video_path + "22.mp4" },
+  { title: "Video 23", src: video_path + "23.mp4" },
+  { title: "Video 24", src: video_path + "24.mp4" },
+  { title: "Video 25", src: video_path + "25.mp4" },
+  { title: "Video 26", src: video_path + "26.mp4" },
+  { title: "Video 27", src: video_path + "27.mp4" },
+  { title: "Video 28", src: video_path + "28.mp4" },
+  { title: "Video 29", src: video_path + "29.mp4" },
+  { title: "Video 30", src: video_path + "30.mp4" },
+  { title: "Video 31", src: video_path + "31.mp4" },
+  { title: "Video 32", src: video_path + "32.mp4" },
+  { title: "Video 33", src: video_path + "33.mp4" },
+  { title: "Video 34", src: video_path + "34.mp4" },
+  { title: "Video 35", src: video_path + "35.mp4" },
+  { title: "Video 36", src: video_path + "36.mp4" },
+  { title: "Video 37", src: video_path + "37.mp4" },
+  { title: "Video 38", src: video_path + "38.mp4" },
+  { title: "Video 39", src: video_path + "39.mp4" },
+  { title: "Video 40", src: video_path + "40.mp4" },
+  { title: "Video 41", src: video_path + "41.mp4" },
+  { title: "Video 42", src: video_path + "42.mp4" },
+  { title: "Video 43", src: video_path + "43.mp4" },
+  { title: "Video 44", src: video_path + "44.mp4" },
+  { title: "Video 45", src: video_path + "45.mp4" },
+  { title: "Video 46", src: video_path + "46.mp4" },
+  { title: "Video 47", src: video_path + "47.mp4" },
+  { title: "Video 48", src: video_path + "48.mp4" },
+  { title: "Video 49", src: video_path + "49.mp4" },
+  { title: "Video 50", src: video_path + "50.mp4" },
+  { title: "Video 51", src: video_path + "51.mp4" },
+  { title: "Video 52", src: video_path + "52.mp4" },
+  { title: "Video 53", src: video_path + "53.mp4" },
+  { title: "Video 54", src: video_path + "54.mp4" },
+  { title: "Video 55", src: video_path + "55.mp4" },
+  { title: "Video 56", src: video_path + "56.mp4" },
+  { title: "Video 57", src: video_path + "57.mp4" },
+  { title: "Video 58", src: video_path + "58.mp4" },
+  { title: "Video 59", src: video_path + "59.mp4" },
+  { title: "Video 60", src: video_path + "60.mp4" },
+  { title: "Video 61", src: video_path + "61.mp4" },
+  { title: "Video 62", src: video_path + "62.mp4" },
+  { title: "Video 63", src: video_path + "63.mp4" },
+  { title: "Video 64", src: video_path + "64.mp4" },
+  { title: "Video 65", src: video_path + "65.mp4" },
+  { title: "Video 66", src: video_path + "66.mp4" },
+  { title: "Video 67", src: video_path + "67.mp4" },
+  { title: "Video 68", src: video_path + "68.mp4" },
+  { title: "Video 69", src: video_path + "69.mp4" },
+  { title: "Video 70", src: video_path + "70.mp4" },
+  { title: "Video 71", src: video_path + "71.mp4" },
+  { title: "Video 72", src: video_path + "72.mp4" },
+  { title: "Video 73", src: video_path + "73.mp4" },
+  { title: "Video 74", src: video_path + "74.mp4" },
+  { title: "Video 75", src: video_path + "75.mp4" },
+  { title: "Video 76", src: video_path + "76.mp4" },
+  { title: "Video 77", src: video_path + "77.mp4" },
+  { title: "Video 78", src: video_path + "78.mp4" },
+  { title: "Video 79", src: video_path + "79.mp4" },
+  { title: "Video 80", src: video_path + "80.mp4" },
+  { title: "Video 81", src: video_path + "81.mp4" },
+  { title: "Video 82", src: video_path + "82.mp4" },
+  { title: "Video 83", src: video_path + "83.mp4" },
+  { title: "Video 84", src: video_path + "84.mp4" },
+  { title: "Video 85", src: video_path + "85.mp4" },
+  { title: "Video 86", src: video_path + "86.mp4" },
+  { title: "Video 87", src: video_path + "87.mp4" },
+  { title: "Video 88", src: video_path + "88.mp4" },
+  { title: "Video 89", src: video_path + "89.mp4" },
+  { title: "Video 90", src: video_path + "90.mp4" },
+  { title: "Video 91", src: video_path + "91.mp4" },
+  { title: "Video 92", src: video_path + "92.mp4" },
+  { title: "Video 93", src: video_path + "93.mp4" },
+  { title: "Video 94", src: video_path + "94.mp4" },
+  { title: "Video 95", src: video_path + "95.mp4" },
+  { title: "Video 96", src: video_path + "96.mp4" },
+  { title: "Video 97", src: video_path + "97.mp4" },
+  { title: "Video 98", src: video_path + "98.mp4" },
+  { title: "Video 99", src: video_path + "99.mp4" },
+  { title: "Video 100", src: video_path + "100.mp4" },
+  { title: "Video 101", src: video_path + "101.mp4" },
+  { title: "Video 102", src: video_path + "102.mp4" },
+  { title: "Video 103", src: video_path + "103.mp4" },
+  { title: "Video 104", src: video_path + "104.mp4" },
+  { title: "Video 105", src: video_path + "105.mp4" },
+  { title: "Video 106", src: video_path + "106.mp4" },
+  { title: "Video 107", src: video_path + "107.mp4" },
+  { title: "Video 108", src: video_path + "108.mp4" },
+  { title: "Video 109", src: video_path + "109.mp4" },
+  { title: "Video 110", src: video_path + "110.mp4" },
+  { title: "Video 111", src: video_path + "111.mp4" },
+  { title: "Video 112", src: video_path + "112.mp4" },
+  { title: "Video 113", src: video_path + "113.mp4" },
+  { title: "Video 114", src: video_path + "114.mp4" },
+  { title: "Video 115", src: video_path + "115.mp4" },
+  { title: "Video 116", src: video_path + "116.mp4" },
+  { title: "Video 117", src: video_path + "117.mp4" },
+  { title: "Video 118", src: video_path + "118.mp4" },
+  { title: "Video 119", src: video_path + "119.mp4" },
+  { title: "Video 120", src: video_path + "120.mp4" },
+  { title: "Video 121", src: video_path + "121.mp4" },
+  { title: "Video 122", src: video_path + "122.mp4" },
+  { title: "Video 123", src: video_path + "123.mp4" },
+  { title: "Video 124", src: video_path + "124.mp4" },
+  { title: "Video 125", src: video_path + "125.mp4" },
+  { title: "Video 126", src: video_path + "126.mp4" },
+  { title: "Video 127", src: video_path + "127.mp4" },
+  { title: "Video 128", src: video_path + "128.mp4" },
+  { title: "Video 129", src: video_path + "129.mp4" },
+  { title: "Video 130", src: video_path + "130.mp4" },
+  { title: "Video 131", src: video_path + "131.mp4" },
+  { title: "Video 132", src: video_path + "132.mp4" },
+  { title: "Video 133", src: video_path + "133.mp4" },
+  { title: "Video 134", src: video_path + "134.mp4" },
+  { title: "Video 135", src: video_path + "135.mp4" },
+  { title: "Video 136", src: video_path + "136.mp4" },
+  { title: "Video 137", src: video_path + "137.mp4" },
+  { title: "Video 138", src: video_path + "138.mp4" },
+  { title: "Video 139", src: video_path + "139.mp4" },
+  { title: "Video 140", src: video_path + "140.mp4" },
+  { title: "Video 141", src: video_path + "141.mp4" },
+  { title: "Video 142", src: video_path + "142.mp4" },
+  { title: "Video 143", src: video_path + "143.mp4" },
+  { title: "Video 144", src: video_path + "144.mp4" },
+  { title: "Video 145", src: video_path + "145.mp4" },
+  { title: "Video 146", src: video_path + "146.mp4" },
+  { title: "Video 147", src: video_path + "147.mp4" },
+  { title: "Video 148", src: video_path + "148.mp4" },
+  { title: "Video 149", src: video_path + "149.mp4" },
+  { title: "Video 150", src: video_path + "150.mp4" },
+  { title: "Video 151", src: video_path + "151.mp4" },
+  { title: "Video 152", src: video_path + "152.mp4" },
+  { title: "Video 153", src: video_path + "153.mp4" },
+  { title: "Video 154", src: video_path + "154.mp4" },
+  { title: "Video 155", src: video_path + "155.mp4" },
+  { title: "Video 156", src: video_path + "156.mp4" },
+  { title: "Video 157", src: video_path + "157.mp4" },
+  { title: "Video 158", src: video_path + "158.mp4" },
+  { title: "Video 159", src: video_path + "159.mp4" },
+  { title: "Video 160", src: video_path + "160.mp4" },
+  { title: "Video 161", src: video_path + "161.mp4" },
+  { title: "Video 162", src: video_path + "162.mp4" },
+  { title: "Video 163", src: video_path + "163.mp4" },
+  { title: "Video 164", src: video_path + "164.mp4" },
+  { title: "Video 165", src: video_path + "165.mp4" },
+  { title: "Video 166", src: video_path + "166.mp4" },
+  { title: "Video 167", src: video_path + "167.mp4" },
+  { title: "Video 168", src: video_path + "168.mp4" },
+  { title: "Video 169", src: video_path + "169.mp4" },
+  { title: "Video 170", src: video_path + "170.mp4" },
+  { title: "Video 171", src: video_path + "171.mp4" },
+  { title: "Video 172", src: video_path + "172.mp4" },
+  { title: "Video 173", src: video_path + "173.mp4" },
+  { title: "Video 174", src: video_path + "174.mp4" },
+  { title: "Video 175", src: video_path + "175.mp4" },
+  { title: "Video 176", src: video_path + "176.mp4" },
+  { title: "Video 177", src: video_path + "177.mp4" },
+  { title: "Video 178", src: video_path + "178.mp4" },
+  { title: "Video 179", src: video_path + "179.mp4" },
+  { title: "Video 180", src: video_path + "180.mp4" },
+  { title: "Video 181", src: video_path + "181.mp4" },
+  { title: "Video 182", src: video_path + "182.mp4" },
+  { title: "Video 183", src: video_path + "183.mp4" },
+  { title: "Video 184", src: video_path + "184.mp4" },
+  { title: "Video 185", src: video_path + "185.mp4" },
+  { title: "Video 186", src: video_path + "186.mp4" },
+  { title: "Video 187", src: video_path + "187.mp4" },  
+  { title: "Video 188", src: video_path + "188.mp4" },
+  { title: "Video 189", src: video_path + "189.mp4" },
+  { title: "Video 190", src: video_path + "190.mp4" },
+  { title: "Video 191", src: video_path + "191.mp4" },
+  { title: "Video 192", src: video_path + "192.mp4" },
+  { title: "Video 193", src: video_path + "193.mp4" },
+  { title: "Video 194", src: video_path + "194.mp4" },
+  { title: "Video 195", src: video_path + "195.mp4" },
+  { title: "Video 196", src: video_path + "196.mp4" },
+  { title: "Video 197", src: video_path + "197.mp4" }
+];
+
+    // --- 各遅延パターンごとに使う動画インデックスをCSVから読み込む ---
+    let PREDEFINED_VIDEO_INDEXES = [[187, 188, 189, 190, 191, 192],
+    [187, 188, 189, 190, 191, 192],
+    [187, 188, 189, 190, 191, 192]];
+
+    let VIDEO_SWITCH_DELAYS = [
+    [0,	0,	0,	0,	0,	0],
+    [0,	1000,	0,	0,	0,	0],
+    [0,	1000,	0,	1000,	0,	0]
+    ];
+    const DEFAULT_DELAY = 1000;
+    let delaysLoaded = true;
+    let EVALUATION_REPEAT = VIDEO_SWITCH_DELAYS.length || 1; // デフォルト値を設定
+    //let EVALUATION_REPEAT = 2; // デフォルト値を設定
+    console.log('EVALUATION_REPEAT:', EVALUATION_REPEAT);
+
+    function shuffleRowsInSync(arr1, arr2) {
+      const zipped = arr1.map((val, idx) => [val, arr2[idx]]);
+      for (let i = zipped.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [zipped[i], zipped[j]] = [zipped[j], zipped[i]];
+      }
+      // Unzip back
+      for (let i = 0; i < zipped.length; i++) {
+        arr1[i] = zipped[i][0];
+        arr2[i] = zipped[i][1];
+      }
+    }
+    //shuffleRowsInSync(PREDEFINED_VIDEO_INDEXES, VIDEO_SWITCH_DELAYS);
+    console.log('Loaded video switch delays:', VIDEO_SWITCH_DELAYS.length, VIDEO_SWITCH_DELAYS[0],PREDEFINED_VIDEO_INDEXES[0]);
+
+    function waitForAllVideosLoaded(videoList, callback) {
+      let loadedCount = 0;
+      const total = videoList.length;
+      if (total === 0) {
+        callback();
+        return;
+      }
+      videoList.forEach(videoObj => {
+        fetch(videoObj.src)
+          .then(response => {
+            loadedCount++;
+            if (loadedCount === total) callback();
+          })
+          .catch(() => {
+            loadedCount++;
+            if (loadedCount === total) callback();
+          });
+      });
+    }
+
+    const startBtn = document.getElementById('start-btn');
+    startBtn.disabled = true;
+    startBtn.style.opacity = '0.5';
+
+      // ページ表示時に動画ロードを開始
+    waitForAllVideosLoaded(getPredefinedVideos(evaluationCount), () => {
+      startBtn.disabled = false;
+      startBtn.style.opacity = '1';
+    });
 
     document.getElementById('start-btn').onclick = function() {
       // Get name, age and experience values
@@ -187,16 +451,7 @@
 
     // 各動画ごとにカスタム遅延（ミリ秒）を設定
 // 各ラウンドごと・各動画ごとのカスタム遅延（例: 3ラウンド×4動画）
-let VIDEO_SWITCH_DELAYS = [
-[0,	0,	0,	0,	0,	0],
-[0,	1000,	0,	0,	0,	0],
-[0,	1000,	0,	1000,	0,	0]
-];
-const DEFAULT_DELAY = 1000;
-let delaysLoaded = true;
-let EVALUATION_REPEAT = VIDEO_SWITCH_DELAYS.length || 1; // デフォルト値を設定
-//let EVALUATION_REPEAT = 2; // デフォルト値を設定
-console.log('EVALUATION_REPEAT:', EVALUATION_REPEAT);
+
 // CSVファイルを読み込む関数（行単位でランダム並び替え、各行の内容はそのまま）
 function loadDelaysFromCSV(csvUrl, callback) {
   fetch(csvUrl)
@@ -233,7 +488,7 @@ function shuffleArray(array) {
 }
 
 //let EVALUATION_REPEAT = 1; // CSVロード後に上書き
-let evaluationCount = 0;
+
 
 function getCurrentDelay() {
   // currentIndexが範囲外の場合はデフォルト値
@@ -447,6 +702,9 @@ function restartPlayback() {
   updateShorts();
 }
 
+
+
+
 // finishPageの代わりにスコアページを表示
 function showFinishPage() {
   shortsContainer.style.display = 'none';
@@ -460,6 +718,7 @@ function showFinishPage() {
       video.muted = true;
     } catch (e) {}
   });
+  
   // 評価タイトル更新
   scorePage.querySelector('h1').textContent = `Test sample # (${evaluationCount + 1}/ ${EVALUATION_REPEAT})`;
   updateProgressBar(); // ★ 進捗バー更新
@@ -472,6 +731,17 @@ function showFinishPage() {
     window.scrollTo(0, 1);
     window.scrollTo(0, 0);
   }, 50);
+
+const nextBtn = document.getElementById('next-btn');
+nextBtn.disabled = true;
+nextBtn.style.opacity = '0.5';
+
+  // ページ表示時に動画ロードを開始
+waitForAllVideosLoaded(getPredefinedVideos(evaluationCount+1), () => {
+  nextBtn.disabled = false;
+  nextBtn.style.opacity = '1';
+});
+
 }
 
 function updateProgressBar() {
@@ -518,227 +788,7 @@ scoreForm.onsubmit = function(e) {
 
 
 
-var video_path = "video_JP/"
-// --- Video file list (replace with your server video URLs) ---
-const videoList = [
-  { title: "Video 1", src: video_path+"1.mp4" },
-  { title: "Video 2", src: video_path + "2.mp4" },
-  { title: "Video 3", src: video_path + "3.mp4" },
-  { title: "Video 4", src: video_path + "4.mp4" },
-  { title: "Video 5", src: video_path + "5.mp4" },
-  { title: "Video 6", src: video_path + "6.mp4" },
-  { title: "Video 7", src: video_path + "7.mp4" },
-  { title: "Video 8", src: video_path + "8.mp4" },
-  { title: "Video 9", src: video_path + "9.mp4" },
-  { title: "Video 10", src: video_path + "10.mp4" },
-  { title: "Video 11", src: video_path + "11.mp4" },
-  { title: "Video 12", src: video_path + "12.mp4" },
-  { title: "Video 13", src: video_path + "13.mp4" },
-  { title: "Video 14", src: video_path + "14.mp4" },
-  { title: "Video 15", src: video_path + "15.mp4" },
-  { title: "Video 16", src: video_path + "16.mp4" },
-  { title: "Video 17", src: video_path + "17.mp4" },
-  { title: "Video 18", src: video_path + "18.mp4" },
-  { title: "Video 19", src: video_path + "19.mp4" },
-  { title: "Video 20", src: video_path + "20.mp4" },
-  { title: "Video 21", src: video_path + "21.mp4" },
-  { title: "Video 22", src: video_path + "22.mp4" },
-  { title: "Video 23", src: video_path + "23.mp4" },
-  { title: "Video 24", src: video_path + "24.mp4" },
-  { title: "Video 25", src: video_path + "25.mp4" },
-  { title: "Video 26", src: video_path + "26.mp4" },
-  { title: "Video 27", src: video_path + "27.mp4" },
-  { title: "Video 28", src: video_path + "28.mp4" },
-  { title: "Video 29", src: video_path + "29.mp4" },
-  { title: "Video 30", src: video_path + "30.mp4" },
-  { title: "Video 31", src: video_path + "31.mp4" },
-  { title: "Video 32", src: video_path + "32.mp4" },
-  { title: "Video 33", src: video_path + "33.mp4" },
-  { title: "Video 34", src: video_path + "34.mp4" },
-  { title: "Video 35", src: video_path + "35.mp4" },
-  { title: "Video 36", src: video_path + "36.mp4" },
-  { title: "Video 37", src: video_path + "37.mp4" },
-  { title: "Video 38", src: video_path + "38.mp4" },
-  { title: "Video 39", src: video_path + "39.mp4" },
-  { title: "Video 40", src: video_path + "40.mp4" },
-  { title: "Video 41", src: video_path + "41.mp4" },
-  { title: "Video 42", src: video_path + "42.mp4" },
-  { title: "Video 43", src: video_path + "43.mp4" },
-  { title: "Video 44", src: video_path + "44.mp4" },
-  { title: "Video 45", src: video_path + "45.mp4" },
-  { title: "Video 46", src: video_path + "46.mp4" },
-  { title: "Video 47", src: video_path + "47.mp4" },
-  { title: "Video 48", src: video_path + "48.mp4" },
-  { title: "Video 49", src: video_path + "49.mp4" },
-  { title: "Video 50", src: video_path + "50.mp4" },
-  { title: "Video 51", src: video_path + "51.mp4" },
-  { title: "Video 52", src: video_path + "52.mp4" },
-  { title: "Video 53", src: video_path + "53.mp4" },
-  { title: "Video 54", src: video_path + "54.mp4" },
-  { title: "Video 55", src: video_path + "55.mp4" },
-  { title: "Video 56", src: video_path + "56.mp4" },
-  { title: "Video 57", src: video_path + "57.mp4" },
-  { title: "Video 58", src: video_path + "58.mp4" },
-  { title: "Video 59", src: video_path + "59.mp4" },
-  { title: "Video 60", src: video_path + "60.mp4" },
-  { title: "Video 61", src: video_path + "61.mp4" },
-  { title: "Video 62", src: video_path + "62.mp4" },
-  { title: "Video 63", src: video_path + "63.mp4" },
-  { title: "Video 64", src: video_path + "64.mp4" },
-  { title: "Video 65", src: video_path + "65.mp4" },
-  { title: "Video 66", src: video_path + "66.mp4" },
-  { title: "Video 67", src: video_path + "67.mp4" },
-  { title: "Video 68", src: video_path + "68.mp4" },
-  { title: "Video 69", src: video_path + "69.mp4" },
-  { title: "Video 70", src: video_path + "70.mp4" },
-  { title: "Video 71", src: video_path + "71.mp4" },
-  { title: "Video 72", src: video_path + "72.mp4" },
-  { title: "Video 73", src: video_path + "73.mp4" },
-  { title: "Video 74", src: video_path + "74.mp4" },
-  { title: "Video 75", src: video_path + "75.mp4" },
-  { title: "Video 76", src: video_path + "76.mp4" },
-  { title: "Video 77", src: video_path + "77.mp4" },
-  { title: "Video 78", src: video_path + "78.mp4" },
-  { title: "Video 79", src: video_path + "79.mp4" },
-  { title: "Video 80", src: video_path + "80.mp4" },
-  { title: "Video 81", src: video_path + "81.mp4" },
-  { title: "Video 82", src: video_path + "82.mp4" },
-  { title: "Video 83", src: video_path + "83.mp4" },
-  { title: "Video 84", src: video_path + "84.mp4" },
-  { title: "Video 85", src: video_path + "85.mp4" },
-  { title: "Video 86", src: video_path + "86.mp4" },
-  { title: "Video 87", src: video_path + "87.mp4" },
-  { title: "Video 88", src: video_path + "88.mp4" },
-  { title: "Video 89", src: video_path + "89.mp4" },
-  { title: "Video 90", src: video_path + "90.mp4" },
-  { title: "Video 91", src: video_path + "91.mp4" },
-  { title: "Video 92", src: video_path + "92.mp4" },
-  { title: "Video 93", src: video_path + "93.mp4" },
-  { title: "Video 94", src: video_path + "94.mp4" },
-  { title: "Video 95", src: video_path + "95.mp4" },
-  { title: "Video 96", src: video_path + "96.mp4" },
-  { title: "Video 97", src: video_path + "97.mp4" },
-  { title: "Video 98", src: video_path + "98.mp4" },
-  { title: "Video 99", src: video_path + "99.mp4" },
-  { title: "Video 100", src: video_path + "100.mp4" },
-  { title: "Video 101", src: video_path + "101.mp4" },
-  { title: "Video 102", src: video_path + "102.mp4" },
-  { title: "Video 103", src: video_path + "103.mp4" },
-  { title: "Video 104", src: video_path + "104.mp4" },
-  { title: "Video 105", src: video_path + "105.mp4" },
-  { title: "Video 106", src: video_path + "106.mp4" },
-  { title: "Video 107", src: video_path + "107.mp4" },
-  { title: "Video 108", src: video_path + "108.mp4" },
-  { title: "Video 109", src: video_path + "109.mp4" },
-  { title: "Video 110", src: video_path + "110.mp4" },
-  { title: "Video 111", src: video_path + "111.mp4" },
-  { title: "Video 112", src: video_path + "112.mp4" },
-  { title: "Video 113", src: video_path + "113.mp4" },
-  { title: "Video 114", src: video_path + "114.mp4" },
-  { title: "Video 115", src: video_path + "115.mp4" },
-  { title: "Video 116", src: video_path + "116.mp4" },
-  { title: "Video 117", src: video_path + "117.mp4" },
-  { title: "Video 118", src: video_path + "118.mp4" },
-  { title: "Video 119", src: video_path + "119.mp4" },
-  { title: "Video 120", src: video_path + "120.mp4" },
-  { title: "Video 121", src: video_path + "121.mp4" },
-  { title: "Video 122", src: video_path + "122.mp4" },
-  { title: "Video 123", src: video_path + "123.mp4" },
-  { title: "Video 124", src: video_path + "124.mp4" },
-  { title: "Video 125", src: video_path + "125.mp4" },
-  { title: "Video 126", src: video_path + "126.mp4" },
-  { title: "Video 127", src: video_path + "127.mp4" },
-  { title: "Video 128", src: video_path + "128.mp4" },
-  { title: "Video 129", src: video_path + "129.mp4" },
-  { title: "Video 130", src: video_path + "130.mp4" },
-  { title: "Video 131", src: video_path + "131.mp4" },
-  { title: "Video 132", src: video_path + "132.mp4" },
-  { title: "Video 133", src: video_path + "133.mp4" },
-  { title: "Video 134", src: video_path + "134.mp4" },
-  { title: "Video 135", src: video_path + "135.mp4" },
-  { title: "Video 136", src: video_path + "136.mp4" },
-  { title: "Video 137", src: video_path + "137.mp4" },
-  { title: "Video 138", src: video_path + "138.mp4" },
-  { title: "Video 139", src: video_path + "139.mp4" },
-  { title: "Video 140", src: video_path + "140.mp4" },
-  { title: "Video 141", src: video_path + "141.mp4" },
-  { title: "Video 142", src: video_path + "142.mp4" },
-  { title: "Video 143", src: video_path + "143.mp4" },
-  { title: "Video 144", src: video_path + "144.mp4" },
-  { title: "Video 145", src: video_path + "145.mp4" },
-  { title: "Video 146", src: video_path + "146.mp4" },
-  { title: "Video 147", src: video_path + "147.mp4" },
-  { title: "Video 148", src: video_path + "148.mp4" },
-  { title: "Video 149", src: video_path + "149.mp4" },
-  { title: "Video 150", src: video_path + "150.mp4" },
-  { title: "Video 151", src: video_path + "151.mp4" },
-  { title: "Video 152", src: video_path + "152.mp4" },
-  { title: "Video 153", src: video_path + "153.mp4" },
-  { title: "Video 154", src: video_path + "154.mp4" },
-  { title: "Video 155", src: video_path + "155.mp4" },
-  { title: "Video 156", src: video_path + "156.mp4" },
-  { title: "Video 157", src: video_path + "157.mp4" },
-  { title: "Video 158", src: video_path + "158.mp4" },
-  { title: "Video 159", src: video_path + "159.mp4" },
-  { title: "Video 160", src: video_path + "160.mp4" },
-  { title: "Video 161", src: video_path + "161.mp4" },
-  { title: "Video 162", src: video_path + "162.mp4" },
-  { title: "Video 163", src: video_path + "163.mp4" },
-  { title: "Video 164", src: video_path + "164.mp4" },
-  { title: "Video 165", src: video_path + "165.mp4" },
-  { title: "Video 166", src: video_path + "166.mp4" },
-  { title: "Video 167", src: video_path + "167.mp4" },
-  { title: "Video 168", src: video_path + "168.mp4" },
-  { title: "Video 169", src: video_path + "169.mp4" },
-  { title: "Video 170", src: video_path + "170.mp4" },
-  { title: "Video 171", src: video_path + "171.mp4" },
-  { title: "Video 172", src: video_path + "172.mp4" },
-  { title: "Video 173", src: video_path + "173.mp4" },
-  { title: "Video 174", src: video_path + "174.mp4" },
-  { title: "Video 175", src: video_path + "175.mp4" },
-  { title: "Video 176", src: video_path + "176.mp4" },
-  { title: "Video 177", src: video_path + "177.mp4" },
-  { title: "Video 178", src: video_path + "178.mp4" },
-  { title: "Video 179", src: video_path + "179.mp4" },
-  { title: "Video 180", src: video_path + "180.mp4" },
-  { title: "Video 181", src: video_path + "181.mp4" },
-  { title: "Video 182", src: video_path + "182.mp4" },
-  { title: "Video 183", src: video_path + "183.mp4" },
-  { title: "Video 184", src: video_path + "184.mp4" },
-  { title: "Video 185", src: video_path + "185.mp4" },
-  { title: "Video 186", src: video_path + "186.mp4" },
-  { title: "Video 187", src: video_path + "187.mp4" },  
-  { title: "Video 188", src: video_path + "188.mp4" },
-  { title: "Video 189", src: video_path + "189.mp4" },
-  { title: "Video 190", src: video_path + "190.mp4" },
-  { title: "Video 191", src: video_path + "191.mp4" },
-  { title: "Video 192", src: video_path + "192.mp4" },
-  { title: "Video 193", src: video_path + "193.mp4" },
-  { title: "Video 194", src: video_path + "194.mp4" },
-  { title: "Video 195", src: video_path + "195.mp4" },
-  { title: "Video 196", src: video_path + "196.mp4" },
-  { title: "Video 197", src: video_path + "197.mp4" }
-];
 
-// --- 各遅延パターンごとに使う動画インデックスをCSVから読み込む ---
-let PREDEFINED_VIDEO_INDEXES = [[187, 188, 189, 190, 191, 192],
-[187, 188, 189, 190, 191, 192],
-[187, 188, 189, 190, 191, 192]];
-
-function shuffleRowsInSync(arr1, arr2) {
-  const zipped = arr1.map((val, idx) => [val, arr2[idx]]);
-  for (let i = zipped.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [zipped[i], zipped[j]] = [zipped[j], zipped[i]];
-  }
-  // Unzip back
-  for (let i = 0; i < zipped.length; i++) {
-    arr1[i] = zipped[i][0];
-    arr2[i] = zipped[i][1];
-  }
-}
-//shuffleRowsInSync(PREDEFINED_VIDEO_INDEXES, VIDEO_SWITCH_DELAYS);
-console.log('Loaded video switch delays:', VIDEO_SWITCH_DELAYS.length, VIDEO_SWITCH_DELAYS[0],PREDEFINED_VIDEO_INDEXES[0]);
 
 // Usage:
 //shuffleRowsInSync(PREDEFINED_VIDEO_INDEXES, VIDEO_SWITCH_DELAYS);

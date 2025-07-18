@@ -187,13 +187,7 @@
 
     // 各動画ごとにカスタム遅延（ミリ秒）を設定
 // 各ラウンドごと・各動画ごとのカスタム遅延（例: 3ラウンド×4動画）
-let VIDEO_SWITCH_DELAYS = [
-[0,	0,	0,	0,	0,	0],
-[0,	1000,	0,	0,	0,	0],
-[0,	1000,	0,	1000,	0,	0],
-[0,	8000,	0,	0,	0,	0],
-[0,	4000,	4000,	4000,	0,	0],
-];
+let VIDEO_SWITCH_DELAYS = [Array(197).fill(0)];
 const DEFAULT_DELAY = 1000;
 let delaysLoaded = true;
 let EVALUATION_REPEAT = VIDEO_SWITCH_DELAYS.length || 1; // デフォルト値を設定
@@ -723,12 +717,7 @@ const videoList = [
 ];
 
 // --- 各遅延パターンごとに使う動画インデックスをCSVから読み込む ---
-let PREDEFINED_VIDEO_INDEXES = [[187, 188, 189, 190, 191, 192],
-[187, 188, 189, 190, 191, 192],
-[187, 188, 189, 190, 191, 192],
-[187, 188, 189, 190, 191, 192],
-[187, 188, 189, 190, 191, 192]
-];
+let PREDEFINED_VIDEO_INDEXES = [Array.from({length: 197}, (_, i) => i)];
 
 function shuffleRowsInSync(arr1, arr2) {
   const zipped = arr1.map((val, idx) => [val, arr2[idx]]);
@@ -997,6 +986,111 @@ function handleSwipe(deltaY) {
     }
   }
 }
+
+// 動画ファイルのロード完了を待つ＋進捗表示
+function waitForAllVideosLoaded(videoElements, callback) {
+  let loadedCount = 0;
+  const total = videoElements.length;
+  // プログレスバー要素を生成
+  let loadingOverlay = document.getElementById('video-loading-overlay');
+  if (!loadingOverlay) {
+    loadingOverlay = document.createElement('div');
+    loadingOverlay.id = 'video-loading-overlay';
+    loadingOverlay.style.position = 'fixed';
+    loadingOverlay.style.top = 0;
+    loadingOverlay.style.left = 0;
+    loadingOverlay.style.width = '100vw';
+    loadingOverlay.style.height = '100vh';
+    loadingOverlay.style.background = 'rgba(0,0,0,0.8)';
+    loadingOverlay.style.zIndex = 999999;
+    loadingOverlay.style.display = 'flex';
+    loadingOverlay.style.flexDirection = 'column';
+    loadingOverlay.style.justifyContent = 'center';
+    loadingOverlay.style.alignItems = 'center';
+    loadingOverlay.innerHTML = `
+      <div style="color:#fff;font-size:2rem;margin-bottom:32px;">動画を読み込み中...</div>
+      <div id="video-loading-bar-container" style="width:320px;height:24px;background:#222;border-radius:12px;overflow:hidden;">
+        <div id="video-loading-bar" style="height:100%;width:0%;background:#ff0000;transition:width 0.2s;"></div>
+      </div>
+      <div id="video-loading-count" style="color:#fff;font-size:1.2rem;margin-top:16px;">0 / ${total}</div>
+    `;
+    document.body.appendChild(loadingOverlay);
+  } else {
+    loadingOverlay.style.display = 'flex';
+    loadingOverlay.querySelector('#video-loading-bar').style.width = '0%';
+    loadingOverlay.querySelector('#video-loading-count').textContent = `0 / ${total}`;
+  }
+
+  function updateProgress() {
+    const percent = Math.round((loadedCount / total) * 100);
+    loadingOverlay.querySelector('#video-loading-bar').style.width = percent + '%';
+    loadingOverlay.querySelector('#video-loading-count').textContent = `${loadedCount} / ${total}`;
+  }
+
+  if (total === 0) {
+    loadingOverlay.style.display = 'none';
+    callback();
+    return;
+  }
+  videoElements.forEach(video => {
+    // 既にロード済みならカウント
+    if (video.readyState >= 3) {
+      loadedCount++;
+      updateProgress();
+      if (loadedCount === total) {
+        loadingOverlay.style.display = 'none';
+        callback();
+      }
+      return;
+    }
+    video.addEventListener('canplaythrough', function handler() {
+      loadedCount++;
+      updateProgress();
+      video.removeEventListener('canplaythrough', handler);
+      if (loadedCount === total) {
+        loadingOverlay.style.display = 'none';
+        callback();
+      }
+    });
+    // エラー時もカウント
+    video.addEventListener('error', function handler() {
+      loadedCount++;
+      updateProgress();
+      video.removeEventListener('error', handler);
+      if (loadedCount === total) {
+        loadingOverlay.style.display = 'none';
+        callback();
+      }
+    });
+  });
+}
+
+// --- 評価開始時に動画ロードを待つ ---
+document.getElementById('start-btn').onclick = function() {
+  startPage.style.display = 'none';
+  // 動画要素生成
+  selectedVideos = getPredefinedVideos(evaluationCount);
+  shortsContainer.innerHTML = selectedVideos.map((video, idx) => `
+    <div class="short" style="transform: translateY(${idx * 100}%);">
+      <video 
+        src="${video.src}" 
+        playsinline 
+        preload="auto"
+        muted
+        style="width:100%;height:100%;background:#000;object-fit:cover;"
+      ></video>
+      <div style="position:absolute;bottom:16px;left:16px;color:#fff;font-size:1.2rem;text-shadow:0 0 8px #000;">${video.title}</div>
+    </div>
+  `).join('');
+  shorts = document.querySelectorAll('.short');
+  const videoElements = Array.from(shorts).map(short => short.querySelector('video'));
+
+  // ロード完了まで待つ
+  waitForAllVideosLoaded(videoElements, () => {
+    shortsContainer.style.display = '';
+    restartPlayback();
+  });
+};
 
 // Log play time when user leaves the page or finish page is shown
 window.addEventListener('beforeunload', () => {
