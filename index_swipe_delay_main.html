@@ -436,8 +436,8 @@
 
     const DEFAULT_DELAY = 1000;
     let delaysLoaded = true;
-    let EVALUATION_REPEAT = VIDEO_SWITCH_DELAYS.length || 1; // デフォルト値を設定
-    //let EVALUATION_REPEAT = 2; // デフォルト値を設定
+    // let EVALUATION_REPEAT = VIDEO_SWITCH_DELAYS.length || 1; // デフォルト値を設定
+    let EVALUATION_REPEAT = 5; // デフォルト値を設定
     console.log('EVALUATION_REPEAT:', EVALUATION_REPEAT);
 
     function shuffleRowsInSync(arr1, arr2) {
@@ -495,6 +495,20 @@
       });
     }
     
+    async function waitForAllVideosToLoad(shortsContainer) {
+      const videos = shortsContainer.querySelectorAll('video');
+      const promises = Array.from(videos).map(video => {
+        return new Promise(resolve => {
+          if (video.readyState >= 3) {
+            resolve();
+          } else {
+            video.addEventListener('canplaythrough', resolve, { once: true });
+            video.addEventListener('error', resolve, { once: true });
+          }
+        });
+      });
+      await Promise.all(promises);
+    }
     
     const startBtn = document.getElementById('start-btn');
     startBtn.disabled = true;
@@ -502,23 +516,26 @@
 
     let selectedVideos = getPredefinedVideos(evaluationCount);
     // fetchで動画データを取得し、Blob URLで表示
-    loadVideosWithFetch(selectedVideos, function(blobUrls) {
     shortsContainer.innerHTML = selectedVideos.map((video, idx) => `
-      <div class="short" style="transform: translateY(${idx * 100}%);">
-        <video 
-          src="${blobUrls[idx]}" 
-          playsinline 
-          preload="auto"
-          autoplay
-          muted
-          style="width:100%;height:100%;background:#000;object-fit:cover;"
-        ></video>
-        <div style="position:absolute;bottom:16px;left:16px;color:#fff;font-size:1.2rem;text-shadow:0 0 8px #000;"></div>
-      </div>
+    <div class="short" style="transform: translateY(${idx * 100}%);">
+      <video 
+        src="${video.src}" 
+        playsinline 
+        preload="auto"
+        autoplay
+        muted
+        style="width:100%;height:100%;background:#000;object-fit:cover;"
+      ></video>
+      <div style="position:absolute;bottom:16px;left:16px;color:#fff;font-size:1.2rem;text-shadow:0 0 8px #000;"></div>
+    </div>
     `).join('');
-     startBtn.disabled = false;
-     startBtn.style.opacity = '1';
-    });
+    
+    // Wrap the await call in an async IIFE
+    (async function() {
+      await waitForAllVideosToLoad(document.getElementById('shorts-container'));
+      startBtn.disabled = false;
+      startBtn.style.opacity = '1';
+    })();
 
     document.getElementById('start-btn').onclick = function() {
       // Get name, age and experience values
@@ -710,26 +727,28 @@ function showFinishPage() {
   nextBtn.disabled = true;
   nextBtn.style.opacity = '0.5';
 
-
-  let selectedVideos = getPredefinedVideos(evaluationCount+1);
-  // fetchで動画データを取得し、Blob URLで表示
-  loadVideosWithFetch(selectedVideos, function(blobUrls) {
-  shortsContainer.innerHTML = selectedVideos.map((video, idx) => `
-      <div class="short" style="transform: translateY(${idx * 100}%);">
-        <video 
-          src="${blobUrls[idx]}" 
-          playsinline 
-          preload="auto"
-          autoplay
-          muted
-          style="width:100%;height:100%;background:#000;object-fit:cover;"
-        ></video>
-        <div style="position:absolute;bottom:16px;left:16px;color:#fff;font-size:1.2rem;text-shadow:0 0 8px #000;"></div>
-      </div>
+   let selectedVideos = getPredefinedVideos(evaluationCount+1);
+    // fetchで動画データを取得し、Blob URLで表示
+    shortsContainer.innerHTML = selectedVideos.map((video, idx) => `
+    <div class="short" style="transform: translateY(${idx * 100}%);">
+      <video 
+        src="${video.src}" 
+        playsinline 
+        preload="auto"
+        autoplay
+        muted
+        style="width:100%;height:100%;background:#000;object-fit:cover;"
+      ></video>
+      <div style="position:absolute;bottom:16px;left:16px;color:#fff;font-size:1.2rem;text-shadow:0 0 8px #000;"></div>
+    </div>
     `).join('');
-     nextBtn.disabled = false;
-     nextBtn.style.opacity = '1';
-    });
+
+  (async function() {
+    await waitForAllVideosToLoad(document.getElementById('shorts-container'));
+    nextBtn.disabled = false;
+    nextBtn.style.opacity = '1';
+  })();
+  
 }
 
 function updateProgressBar() {
