@@ -499,7 +499,8 @@
       const videos = shortsContainer.querySelectorAll('video');
       const promises = Array.from(videos).map(video => {
         return new Promise(resolve => {
-          if (video.readyState >= 3) {
+          if (video.readyState >= 4) {
+            console.log('Video already loaded:', video.src);
             resolve();
           } else {
             video.addEventListener('canplaythrough', resolve, { once: true });

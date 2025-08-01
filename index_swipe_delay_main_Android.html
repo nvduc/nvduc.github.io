@@ -485,9 +485,11 @@
           .then(blob => {
             blobs[idx] = URL.createObjectURL(blob);
             loaded++;
+            console.log(`Video ${idx + 1}/${total} loaded: ${video.src}`);
             if (loaded === total) callback(blobs);
           })
           .catch(() => {
+            console.error(`Error loading video ${idx + 1}/${total}: ${video.src}`);
             blobs[idx] = video.src; // エラー時は元URL
             loaded++;
             if (loaded === total) callback(blobs);
