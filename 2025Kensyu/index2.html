@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025産業教育研修会</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        body { font-family: Arial, sans-serif; margin: 120px 15vw 120px 15vw; background: #f9f9f9; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 2em; }
+        ul.toc { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px #eee; }
+        ul.toc li { margin: 10px 0; }
+        a { color: #2980b9; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        section { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 2em; box-shadow: 0 2px 8px #eee; }
+    </style>
+</head>
+<body>
+ 
+    <h1>第2章 VRヘッドセットとコントローラーでの操作</h1>
+    <p>この章では、VRヘッドセットとコントローラーを使用した操作方法について説明します。VRヘッドセットとして、Meta社のQuest 2/3を使用します。Quest 2/3は、手軽に高品質なVR体験を提供するデバイスです。 Quest 2/3で第1章で作成したシーンを表示し、コントローラを使って操作します。</p>
+    <h2>目次</h2>
+    <ul class="toc">
+        <li><a href="#chapter1"> Meta Quest 2/3について</a></li>
+        <li><a href="#chapter2"> VRヘッドセットで仮想空間を体験する</a></li>
+        <li><a href="#chapter3"> テレポートと視線変更</a></li>
+        <li><a href="#chapter4"> コントローラーでオブジェクトを掴む</a></li>
+    </ul>
+
+    <section id="chapter1">
+        <h2>Meta Quest 2/3</h2>
+        <p>Meta Quest 2/3は本体と二つのコントローラで構成されています。本体は頭に装着し、視覚/聴覚情報を提供します。コントローラは手に持ち、ボタンを使って仮想空間内での操作を行います。</p>
+        <div style="display: flex; justify-content: center; gap: 32px; margin: 24px 0 8px 0; flex-wrap: wrap;">
+            <div style="text-align: center;">
+                <img src="./Quest2.jpeg" alt="Meta Quest 2" style="max-width: 960px; width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+                <div style="color:#888; font-size:0.95em;">Meta Quest 2</div>
+            </div>
+            <div style="text-align: center;">
+                <img src="./quest3.jpeg" alt="Meta Quest 3" style="max-width: 960px; width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+                <div style="color:#888; font-size:0.95em;">Meta Quest 3</div>
+            </div>
+        </div>
+        <p>コントローラには複数のボタンがあり、VR環境での操作をサポートします。</p>
+        <div style="text-align: center;">
+                <img src="./controller_button.png" alt="Controller button" style="max-width: 40%; width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+                <div style="color:#888; font-size:0.95em;">コントローラーボタン</div>
+            </div>
+        <table style="width:100%; border-collapse:collapse; margin: 24px 0;">
+            <thead>
+          <tr style="background:#f0f0f0;">
+              <th style="padding:8px; border:1px solid #ccc;">ボタン名</th>
+              <th style="padding:8px; border:1px solid #ccc;">説明</th>
+          </tr>
+            </thead>
+            <tbody>
+          <tr>
+              <td style="padding:8px; border:1px solid #ccc;"><strong>トリガー</strong></td>
+              <td style="padding:8px; border:1px solid #ccc;">コントローラーの前面に搭載し、押すことで選択やアクションを実行します。</td>
+          </tr>
+          <tr>
+              <td style="padding:8px; border:1px solid #ccc;"><strong>グリップボタン</strong></td>
+              <td style="padding:8px; border:1px solid #ccc;">コントローラーの側面にあるボタンで、オブジェクトを掴む動作を行います。</td>
+          </tr>
+          <tr>
+              <td style="padding:8px; border:1px solid #ccc;"><strong>A/Xボタン</strong></td>
+              <td style="padding:8px; border:1px solid #ccc;">環境内のオブジェクトを選択できます。</td>
+          </tr>
+          <tr>
+              <td style="padding:8px; border:1px solid #ccc;"><strong>B/Yボタン</strong></td>
+              <td style="padding:8px; border:1px solid #ccc;">前の画面やメニューに戻ることができます。</td>
+          </tr>
+          <tr>
+              <td style="padding:8px; border:1px solid #ccc;"><strong>Metaボタン</strong></td>
+              <td style="padding:8px; border:1px solid #ccc;">ユニバーサルメニューを表示できます。長押しすることで、ヘッドセットビューのセンター位置を再調整することもできます。</td>
+          </tr>
+          <tr>
+              <td style="padding:8px; border:1px solid #ccc;"><strong>メニューボタン</strong></td>
+              <td style="padding:8px; border:1px solid #ccc;">アプリ内やエクスペリエンス内のメニューを表示できます。</td>
+          </tr>
+          <tr>
+              <td style="padding:8px; border:1px solid #ccc;"><strong>サムスティック</strong></td>
+              <td style="padding:8px; border:1px solid #ccc;">コントローラーの中央にあるスティックで、移動や視点の変更を行います。</td>
+          </tr>
+            </tbody>
+        </table>
+
+    </section>
+    <section id="chapter2">
+        <h2>VRヘッドセットで仮想空間を体験する</h2>
+        <p>第1章で作成した仮想空間をMeta Questで体験する手順を説明します．</p>
+        <p>まず，ヘッドセットを装着したら、コントローラを手に持ち、仮想空間内での操作を開始します。</p>
+        <p>次に、右コントローラーの<strong>Metaボタン</strong>を押して、メニューを表示させます。</p>
+        <div style="text-align: center;">
+            <img src="./quest_menu_anno.png" alt="Meta Button" style="max-width: 40%; width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+            <div style="color:#888; font-size:0.95em;">メニューバー</div>
+        </div>
+        <p>メニューが表示されたら、右コントローラーの<strong>トリガーボタン</strong>を押して、Browserアプリを開きます。</p>
+        <div style="text-align: center;">
+            <img src="./quest_browser_anno.png" alt="Browser App" style="max-width: 40%; width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+            <div style="color:#888; font-size:0.95em;">Browserアプリ</div>
+        </div>
+        <p>Browserのアドレスバーに以下のURLを入力して、Enterキーを押します。</p>
+         <div style="text-align: center;">
+            <img src="./quest_enter_anno.png" alt="Browser App" style="max-width: 40%; width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+            <div style="color:#888; font-size:0.95em;">HTMLファイルをアクセスする</div>
+        </div>
+        <p>PCのブラウザと同じ画面が出たら，画面右下にあるVRボタンをトリガーボタンを押すと，仮想空間に入ることができます</p>
+        <div style="display: flex; justify-content: center; gap: 32px; margin: 24px 0 8px 0; flex-wrap: wrap;">
+          <div style="flex:1; min-width:220px; max-width:400px; text-align: center;">
+            <img src="./quest_enter_VRmode_anno.png" alt="VR Button" style="width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+            <div style="color:#888; font-size:0.95em;">VRモードに入る</div>
+          </div>
+          <div style="flex:1; min-width:220px; max-width:400px; text-align: center;">
+            <img src="./quest_inside_VR.jpg" alt="VR Button" style="width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+            <div style="color:#888; font-size:0.95em;">VR空間内</div>
+          </div>
+        </div>
+        <p>VR空間に入ると，周囲を見渡すことができ、仮想空間内のオブジェクトを確認できます。この段階では空間内の移動やオブジェクトの操作がまだできない状態です．次のステップでは、コントローラーを使って空間内を移動したり、オブジェクトを掴んだりすることができるようになります。</p>
+    </section>
+    <section>
+      <script>
+      function copyCode(codeId) {
+        const code = document.getElementById(codeId).innerText;
+        navigator.clipboard.writeText(code).then(function() {
+          alert('コードをコピーしました！');
+        }, function() {
+          alert('コピーに失敗しました');
+        });
+      }
+     </script>
+        <h2>VR空間での移動（テレポート）と視線変更</h2>
+        <p>VR空間内での移動は、blink-controlsというコンポネントを使って実現します。まず，index.htmlファイルの&lt;head&gt;タグ内にblink-controlsコンポネントを以下のように追加します。なお，オブジェクトを掴む処理を行うmain.jsファイルも読み込みます．ここは赤いテキストだけコピーして，index.htmlファイルに貼り付けます。</p>
+       <div style="position:relative;">
+      <button onclick="copyCode('teleport-1')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="teleport-1" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+      <code class="language-markup">
+
+      &lt;head&gt;
+        &lt;meta charset="UTF-8"/&gt;
+        &lt;script src="https://aframe.io/releases/1.6.0/aframe.min.js"&gt;&lt;/script&gt;
+        &lt;script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"&gt;&lt;/script&gt;
+        <span style="color:red;">&lt;script src="https://cdn.jsdelivr.net/npm/aframe-blink-controls/dist/aframe-blink-controls.min.js"&gt;&lt;/script&gt;</span>
+        <span style="color:red;">&lt;script src="./main.js"&gt;&lt;/script&gt;</span>
+      &lt;/head&gt;
+      </code>
+      </pre>
+        </div>
+      <p>次に、&lt;a-entity id="player"&gt;タグ内にblink-controlsコンポーネントを左コントローラーに追加します。</p>
+        <div style="position:relative;">
+      <button onclick="copyCode('teleport-2')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="teleport-2" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+      <code class="language-markup">
+        &lt;a-entity id="player"&gt;
+            &lt;a-entity id="camera" camera position="0 1.6 0" wasd-controls look-controls&gt;&lt;/a-entity&gt;
+            <span style="color:red;">&lt;a-entity id="left-hand" laser-controls="hand: left" blink-controls&gt;&lt;/a-entity&gt;</span>
+        &lt;/a-entity&gt;
+      </code>
+      </pre>
+        </div>
+      <p>これで，左コントローラーを使って視線変更とテレポートができるようになります．視線変更はサムスティックを左右に倒すことで行えます。テレポートはサムスティックを前に倒すと，テレポート先の位置を選択するカーブが表示されて，その位置に移動することができます。下記の動画を参考にして，視線変更とテレポートの操作を確認してください。</p>
+      <!-- insert demo video -->
+      <div style="text-align: center; margin: 24px 0;">
+        <video controls style="max-width: 50%; height: auto;">
+          <source src="./teleport_demo.mp4" type="video/mp4">
+          お使いのブラウザは動画タグに対応していません。
+        </video>
+        <div style="color:#888; font-size:0.95em;">テレポートのデモ動画</div>
+      </div>
+    </section>
+    <section>
+        <h2>コントローラーでオブジェクトを掴む</h2>
+        <p>右コントローラーを使って、VR空間内のオブジェクトを掴む方法を説明します。</p>
+         <p>まず, &lt;a-entity id="player"&gt;タグ内に右コントローラーコンポネントを追加します．</p>
+        <div style="position:relative;">
+      <button onclick="copyCode('grab-1')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="grab-1" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+      <code class="language-markup">
+        &lt;a-entity id="player"&gt;
+            &lt;a-entity id="camera" camera position="0 1.6 0" wasd-controls look-controls&gt;&lt;/a-entity&gt;
+            &lt;a-entity id="left-hand" laser-controls="hand: left" blink-controls&gt;&lt;/a-entity&gt;
+            <span style="color:red;">&lt;a-entity id="right-hand" laser-controls="hand: right" raycaster="objects: .collidable; far: 5" vr-controller&gt;&lt;/a-entity&gt;</span>
+        &lt;/a-entity&gt;
+      </code>
+      </pre>
+        </div>
+        <p>次に、オブジェクトをレーキャスターと反応するようにclass="collidable"属性を追加します。</p>
+          <div style="position:relative;">
+      <button onclick="copyCode('grab-2')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="grab-2" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+      <code class="language-markup">
+          &lt;a-box <span style="color:red;">class="collidable"</span> position="0 1 -3" rotation="0 0 0" width="1" height="1" depth="1" color="green"&gt;&lt;/a-box&gt;
+          &lt;a-sphere <span style="color:red;">class="collidable"</span> position="-2 1 -3" radius="0.5" color="red"&gt;&lt;/a-sphere&gt;
+          &lt;a-cylinder <span style="color:red;">class="collidable"</span> position="2 1 -3" radius="0.5" height="1.5" color="blue"&gt;&lt;/a-cylinder&gt;
+          &lt;a-cone <span style="color:red;">class="collidable"</span> position="4 1 -3" radius-bottom="0.5" height="1.5" color="orange"&gt;&lt;/a-cone&gt;
+      </code>
+      </pre>
+        </div>
+      <p>コントローラーのレーキャスターがオブジェクトに当たったときにグリップボタンを押すと、そのオブジェクトの位置を取得してコントローラーの位置に設定することで，オブジェクトを掴むことができます。また，グリップボタンを離すと，そのオブジェクトを元の位置に戻します。これには下記のJavaScriptコードを使用します。</p>
+             <div style="position:relative;">
+      <button onclick="copyCode('grab-3')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="grab-3" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+      <code class="language-markup">
+      AFRAME.registerComponent("vr-controller", {
+        init: function() {
+          // 掴んだオブジェクトの元の位置・回転を保存するための変数
+          
+          const el = this.el;
+          el.originalObjectState = null;
+          
+          // raycasterにぶつかったオブジェクト
+          el.selectedObject = null;
+          
+          // コントローラーのグリップボタンが押されているかを表現する
+          el.grip = false;
+          
+          el.addEventListener('gripdown', function (event) {
+            txt.setAttribute("value", "Grip down");
+            el.grip = true;
+            // 掴み始めた時に、selectedObjectがあれば元の位置・回転を保存
+            if (el.selectedObject) {
+              el.originalObjectState = {
+                object: el.selectedObject,
+                position: el.selectedObject.object3D.position.clone(),
+                quaternion: el.selectedObject.object3D.quaternion.clone()
+              };
+            }
+          });
+          el.addEventListener('gripup', function (event) {
+           
+            el.grip = false;
+            // 掴んでいたオブジェクトを元の位置・回転に戻す
+            if (el.originalObjectState && el.originalObjectState.object) {
+              el.originalObjectState.object.object3D.position.copy(el.originalObjectState.position);
+              el.originalObjectState.object.object3D.quaternion.copy(el.originalObjectState.quaternion);
+              el.originalObjectState = null;
+            }
+          });
+          
+          el.addEventListener("raycaster-closest-entity-changed", function(e) {
+            
+            this.selectedObject = e.detail.els[0];
+            // 新しく掴んだ時に元の位置・回転を保存
+            if (el.grip && this.selectedObject) {
+              el.originalObjectState = {
+                object: this.selectedObject,
+                position: this.selectedObject.object3D.position.clone(),
+                quaternion: this.selectedObject.object3D.quaternion.clone()
+              };
+            }
+          });
+        },
+      
+        tick: function() {
+          var el = this.el;
+          if (!el.selectedObject) {
+            return;
+          }
+          if (!el.grip) {
+            return;
+          }
+
+          // オブジェクトとぶつかったraycaster(コントローラー原点の座標)を取得
+          var ray = el.getAttribute("raycaster").direction;
+          
+          // コントローラーから見たraycasterとの方向のみを取り出す
+          var p = new THREE.Vector3(ray.x, ray.y, ray.z);
+          p.normalize();
+          
+          // raycasterとぶつかった部分と同じ位置にオブジェクトを動かす場合はfarと同じにする
+          // 引き寄せる場合はfarよりも小さくする
+          p.multiplyScalar(1);
+
+          // コントローラー原点からワールド原点に変換して新しいオブジェクトの位置を計算する
+          el.object3D.localToWorld(p);
+          
+          // オブジェクトを移動させる
+          el.selectedObject.object3D.position.set(p.x, p.y, p.z);
+          // コントローラーの回転をオブジェクトに適用
+          el.selectedObject.object3D.quaternion.copy(el.object3D.quaternion);
+          
+        }
+      });
+      
+      </code>
+      </pre>
+      </div>
+      <p>上記のコードをmain.jsファイルに貼り付けて,保存してください。VRでオブジェクトを掴むことができるようになったか確認してください</p>
+        <!-- insert demo video -->
+      <div style="text-align: center; margin: 24px 0;">
+        <video controls style="max-width: 50%; height: auto;">
+          <source src="./object_grab_short.mp4" type="video/mp4">
+          お使いのブラウザは動画タグに対応していません。
+        </video>
+        <div style="color:#888; font-size:0.95em;">オブジェクト掴みのデモ動画</div>
+      </div>
+    </section>
+    <!-- insert buttons side by side to go to index.html and index3.html -->
+     <div style="display: flex; justify-content: center; gap: 32px; margin: 2em 0 1em 0;">
+    <a href="index.html" style="display:inline-block; padding:10px 24px; background:#2980b9; color:#fff; border-radius:6px; text-decoration:none; font-size:1.1em; font-weight:bold; box-shadow:0 2px 8px #eee;">第1章へ</a>
+    <a href="index3.html" style="display:inline-block; padding:10px 24px; background:#2980b9; color:#fff; border-radius:6px; text-decoration:none; font-size:1.1em; font-weight:bold; box-shadow:0 2px 8px #eee;">第3章へ</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025産業教育研修会</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        body { font-family: Arial, sans-serif; margin: 120px 15vw 120px 15vw; background: #f9f9f9; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 2em; }
+        ul.toc { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px #eee; }
+        ul.toc li { margin: 10px 0; }
+        a { color: #2980b9; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        section { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 2em; box-shadow: 0 2px 8px #eee; }
+    </style>
+</head>
+<body>
+    <h1>第1章：仮想空間を構築する</h1>
+    <h2>目次</h2>
+    <ul class="toc">
+        <li><a href="#chapter1"> はじめに</a></li>
+        
+        <li><a href="#chapter3"> 開発環境: VSCode</a></li>
+        <li><a href="#chapter2"> A-Frameとは?</a></li>
+        <li><a href="#chapter6"> A-Frameで仮想空間を定義するために使用するタグ</a></li>
+        <li><a href="#chapter4"> 仮想空間を作ってみよ</a></li>
+        <li><a href="#chapter5"> プログラムの解説 </a></li>
+        
+        </a></li>
+         <li><a href="#chapter7"> 様々なオブジェクトを配置してみよう</a></li>
+        </a></li>
+    </ul>
+
+    <section id="chapter1">
+        <h2> はじめに</h2>
+        <p>本章ではA-Frameの使い方について、その手順をまとめていきます。最低限のコードで動く事を優先させますので、機能の詳細について、説明を省いている箇所がありますのでご注意ください。</p>
+        <p>最終的な完成イメージは下記の通りです。</p>
+        <img src="./multiple_object_example.png" alt="A-Frame Example" style="max-width: 75%; height: auto;">
+        <div style="text-align:center; color:#888; font-size:0.95em; margin-top:8px;"></div>
+    </section>
+</section>
+
+     <section id="chapter3">
+        <h2>開発環境：VSCode</h2>
+        <p>VScodeとは、Microsoftが開発した無料のソースコードエディタです。多くのプラグインが用意されており、HTML、CSS、JavaScriptなどのWeb開発に特化した機能を持っています。</p>
+         <img src="./vscode_interface.png" alt="VSCode Interface" style="max-width: 75%; height: auto;">
+        <div style="text-align:center; color:#888; font-size:0.95em; margin-top:8px;">VSCodeのインターフェース</div>
+    </section>
+    <section id="chapter2">
+        <h2>A-Frameとは?</h2>
+        <p>A-Frameは、Webブラウザで気軽にVRコンテンツを作る事ができる、大人気の定番ライブラリです。HTMLのようなマークアップ言語を使用して3Dシーンを記述でき、JavaScriptでインタラクションを追加することができます。</p>
+        <p>A-Frameは、WebXRという技術を使っており、気軽にVRコンテンツを作る事ができます。
+HTMLだけで構築することも可能であり、初学者さんにもとても理解しやすいフレームワークになっています。</p>
+
+更に、Oculus Rift、HTC Vive等、WebXRに対応しているVRデバイスを用意すれば、そのままVR体験をする事ができます。</p>
+<a href="https://aframe.io/" target="_blank">
+    <img src="./img3.png" alt="A-Frame Example" style="max-width: 75%; height: auto;">
+</a>
+<div style="text-align:center; color:#888; font-size:0.95em; margin-top:8px;">
+    <a href="https://aframe.io/" target="_blank" style="color:#888; text-decoration:underline;">A-Frame公式サイト（外部リンク）</a>
+</div>
+    <!-- <h3>サンプルコード</h3>
+    <div style="position:relative;">
+      <button onclick="copyAFrameCode()" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="aframe-code" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+          &lt;a-scene&gt;
+          &lt;a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"&gt;&lt;/a-box&gt;
+          &lt;a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"&gt;&lt;/a-sphere&gt;
+          &lt;a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"&gt;&lt;/a-cylinder&gt;
+          &lt;a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"&gt;&lt;/a-plane&gt;
+          &lt;a-sky color="#ECECEC"&gt;&lt;/a-sky&gt;
+        &lt;/a-scene&gt;
+      </code>
+      </pre>
+    </div> -->
+
+    <script>
+      function copyOtherHtmlCode() {
+        const code = document.getElementById('other-html-code').innerText;
+        navigator.clipboard.writeText(code).then(function() {
+          alert('コードをコピーしました！');
+        }, function() {
+          alert('コピーに失敗しました');
+        });
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-markup.min.js"></script>
+    <script>
+      function copyAFrameCode() {
+        const code = document.getElementById('aframe-code').innerText;
+        navigator.clipboard.writeText(code).then(function() {
+          alert('コードをコピーしました！');
+        }, function() {
+          alert('コピーに失敗しました');
+        });
+      }
+    </script>
+    </section>
+    <section id="chapter6">
+        <script>
+      function copyCode(codeId) {
+        const code = document.getElementById(codeId).innerText;
+        navigator.clipboard.writeText(code).then(function() {
+          alert('コードをコピーしました！');
+        }, function() {
+          alert('コピーに失敗しました');
+        });
+      }</script>
+        <h2>A-Frameでオブジェクトを定義するために使用するタグ</h2>
+        <p>A-Frameでは、&lt;a-box&gt;タグなど、3Dオブジェクトを配置するためのタグが用意されています。以下に代表的なタグを紹介します。</p>
+        <subsection>
+            <h3>a-boxタグ</h3>
+            <p>&lt;a-box&gt;タグは、3D空間に立方体を配置するためのタグです。
+            </p>
+            <h3>主な属性一覧</h3>
+        <table style="width:100%; border-collapse:collapse; margin-top:1em;">
+          <thead style="background:#f4f4f4;">
+            <tr>
+              <th style="border:1px solid #ccc; padding:8px;">属性名</th>
+              <th style="border:1px solid #ccc; padding:8px;">説明</th>
+              <th style="border:1px solid #ccc; padding:8px;">記述例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">position</td>
+              <td style="border:1px solid #ccc; padding:8px;">オブジェクトの位置 (x, y, z)</td>
+              <td style="border:1px solid #ccc; padding:8px;">position="0 1 2"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">rotation</td>
+              <td style="border:1px solid #ccc; padding:8px;">オブジェクトの回転 (x, y, z)</td>
+              <td style="border:1px solid #ccc; padding:8px;">rotation="0 45 0"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">color</td>
+              <td style="border:1px solid #ccc; padding:8px;">オブジェクトの色</td>
+              <td style="border:1px solid #ccc; padding:8px;">color="blue"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">width / height / depth </td>
+              <td style="border:1px solid #ccc; padding:8px;">サイズ指定</td>
+              <td style="border:1px solid #ccc; padding:8px;">width="1" height="1" depth="1"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">src</td>
+              <td style="border:1px solid #ccc; padding:8px;">テクスチャ設定</td>
+              <td style="border:1px solid #ccc; padding:8px;">src="url_to_texture.jpg"</td>
+            </tr>
+          </tbody>
+        </table>
+      <div style="position:relative;">
+      <button onclick="copyCode('a-box-example')" style="position:absolute; top:8px; right:8px; z-index:2; padding:3px 6px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="a-box-example" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+          &lt;a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" width="1" height="1" depth="1" src="url_to_texture.jpg" &gt;&lt;/a-box&gt;
+      </code>
+      </pre>
+      </div>
+
+    
+    </script>
+        </subsection>
+        <subsection>
+            <h3>a-sphereタグ</h3>
+            <p>&lt;a-sphere&gt;タグは、3D空間に球体を配置するためのタグです。
+            </p>
+            <h3>主な属性一覧</h3>
+        <table style="width:100%; border-collapse:collapse; margin-top:1em;">
+          <thead style="background:#f4f4f4;">
+            <tr>
+              <th style="border:1px solid #ccc; padding:8px;">属性名</th>
+              <th style="border:1px solid #ccc; padding:8px;">説明</th>
+              <th style="border:1px solid #ccc; padding:8px;">記述例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">position</td>
+              <td style="border:1px solid #ccc; padding:8px;">オブジェクトの位置 (x, y, z)</td>
+              <td style="border:1px solid #ccc; padding:8px;">position="0 1 2"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">rotation</td>
+              <td style="border:1px solid #ccc; padding:8px;">オブジェクトの回転 (x, y, z)</td>
+              <td style="border:1px solid #ccc; padding:8px;">rotation="0 45 0"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">color</td>
+              <td style="border:1px solid #ccc; padding:8px;">オブジェクトの色</td>
+              <td style="border:1px solid #ccc; padding:8px;">color="blue"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">radius </td>
+              <td style="border:1px solid #ccc; padding:8px;">球体の半径</td>
+              <td style="border:1px solid #ccc; padding:8px;">radius="1"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">src</td>
+              <td style="border:1px solid #ccc; padding:8px;">テクスチャ設定</td>
+              <td style="border:1px solid #ccc; padding:8px;">src="url_to_texture.jpg"</td>
+            </tr>
+          </tbody>
+        </table>
+      <div style="position:relative;">
+      <button onclick="copyCode('a-sphere-example')" style="position:absolute; top:8px; right:8px; z-index:2; padding:3px 6px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="a-sphere-example" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+          &lt;a-sphere position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" radius="1" src="url_to_texture.jpg" &gt;&lt;/a-sphere&gt;
+      </code>
+      </pre>
+      </div>
+
+    
+    </script>
+        </subsection>
+        <subsection>
+            <h3>a-cylinderタグ</h3>
+            <p>&lt;a-cylinder&gt;タグは、3D空間に円柱を配置するためのタグです。
+            </p>
+            <h3>主な属性一覧</h3>
+        <table style="width:100%; border-collapse:collapse; margin-top:1em;">
+          <thead style="background:#f4f4f4;">
+            <tr>
+              <th style="border:1px solid #ccc; padding:8px;">属性名</th>
+              <th style="border:1px solid #ccc; padding:8px;">説明</th>
+              <th style="border:1px solid #ccc; padding:8px;">記述例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">position</td>
+              <td style="border:1px solid #ccc; padding:8px;">オブジェクトの位置 (x, y, z)</td>
+              <td style="border:1px solid #ccc; padding:8px;">position="0 1 2"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">rotation</td>
+              <td style="border:1px solid #ccc; padding:8px;">オブジェクトの回転 (x, y, z)</td>
+              <td style="border:1px solid #ccc; padding:8px;">rotation="0 45 0"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">color</td>
+              <td style="border:1px solid #ccc; padding:8px;">オブジェクトの色</td>
+              <td style="border:1px solid #ccc; padding:8px;">color="blue"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">radius </td>
+              <td style="border:1px solid #ccc; padding:8px;">円柱の半径</td>
+              <td style="border:1px solid #ccc; padding:8px;">radius="1"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">height</td>
+              <td style="border:1px solid #ccc; padding:8px;">円柱の高さ</td>
+              <td style="border:1px solid #ccc; padding:8px;">height="1"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">src</td>
+              <td style="border:1px solid #ccc; padding:8px;">テクスチャ設定</td>
+              <td style="border:1px solid #ccc; padding:8px;">src="url_to_texture.jpg"</td>
+            </tr>
+          </tbody>
+        </table>
+      <div style="position:relative;">
+      <button onclick="copyCode('a-cylinder-example')" style="position:absolute; top:8px; right:8px; z-index:2; padding:3px 6px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="a-cylinder-example" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+          &lt;a-cylinder position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" radius="1" height="2" src="url_to_texture.jpg" &gt;&lt;/a-cylinder&gt;
+      </code>
+      </pre>
+      </div>
+
+    
+    </script>
+        </subsection>
+    A-Frameには他にも様々なタグと、そのそれぞれに対して利用できるアトリビュートが多数存在します。必要に応じて、Docsから調べていきましょう。
+    <table style="width:100%; border-collapse:collapse; margin-top:1em;">
+          <thead style="background:#f4f4f4;">
+            <tr>
+              <th style="border:1px solid #ccc; padding:8px;">タグ名</th>
+              <th style="border:1px solid #ccc; padding:8px;">説明</th>
+              <th style="border:1px solid #ccc; padding:8px;">使用例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">a-circle</td>
+              <td style="border:1px solid #ccc; padding:8px;">円の形状を持つオブジェクト</td>
+              <td style="border:1px solid #ccc; padding:8px;"><a href="https://aframe.io/docs/1.7.0/primitives/a-circle.html" target="_blank">Link</a></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">a-plane</td>
+              <td style="border:1px solid #ccc; padding:8px;">平面を表すオブジェクト</td>
+              <td style="border:1px solid #ccc; padding:8px;"><a href="https://aframe.io/docs/1.7.0/primitives/a-plane.html" target="_blank">Link</a></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">a-ring</td>
+              <td style="border:1px solid #ccc; padding:8px;">リング（円環）または円盤の形状</td>
+              <td style="border:1px solid #ccc; padding:8px;"><a href="https://aframe.io/docs/1.7.0/primitives/a-ring.html" target="_blank">Link</a></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">a-cone</td>
+              <td style="border:1px solid #ccc; padding:8px;">円錐の形状を持つオブジェクト</td>
+              <td style="border:1px solid #ccc; padding:8px;"><a href="https://aframe.io/docs/1.7.0/primitives/a-cone.html" target="_blank">Link</a></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">a-cone</td>
+              <td style="border:1px solid #ccc; padding:8px;">円錐の形状を持つオブジェクト</td>
+              <td style="border:1px solid #ccc; padding:8px;"><a href="https://aframe.io/docs/1.7.0/primitives/a-cone.html" target="_blank">Link</a></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">a-text</td>
+              <td style="border:1px solid #ccc; padding:8px;">3D空間にテキストを表示するオブジェクト</td>
+              <td style="border:1px solid #ccc; padding:8px;"><a href="https://aframe.io/docs/1.7.0/primitives/a-text.html" target="_blank">Link</a></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">a-video</td>
+              <td style="border:1px solid #ccc; padding:8px;">3D空間に動画を表示するオブジェクト</td>
+              <td style="border:1px solid #ccc; padding:8px;"><a href="https://aframe.io/docs/1.7.0/primitives/a-video.html" target="_blank">Link</a></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">a-image</td>
+              <td style="border:1px solid #ccc; padding:8px;">3D空間に画像を表示するオブジェクト</td>
+              <td style="border:1px solid #ccc; padding:8px;"><a href="https://aframe.io/docs/1.7.0/primitives/a-image.html" target="_blank">Link</a></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">a-light</td>
+              <td style="border:1px solid #ccc; padding:8px;">光源を表すオブジェクト</td>
+              <td style="border:1px solid #ccc; padding:8px;"><a href="https://aframe.io/docs/1.7.0/primitives/a-light.html" target="_blank">Link</a></td>
+            </tr>
+            
+
+          </tbody>
+        </table>
+    </section>
+    <section id="chapter4">
+        <h2>仮想空間を作ろう</h2>
+        <p>A-Frameを使ってVRの仮想環境を簡単に作れます。まず、プロジェクト名の上にマウスカーソルを合わせ、"New File"ボタンをクリックします。</p>
+         <img src="./newfile_1.png" alt="VSCode Interface" style="max-width: 75%; height: auto;">
+        ファイル名は、"index.html"としましょう。
+         <img src="./newfile_2.png" alt="VSCode Interface" style="max-width: 100%; height: auto;">
+
+        <p>これでindex.htmlファイルが作成されました。</p>
+        <img src="./newfile_3.png" alt="VSCode Interface" style="max-width: 100%; height: auto;">
+
+        <p>次に、下記のコードをコピーしてindex.htmlファイルに貼り付けます。</p>
+        <div style="position:relative;">
+         <button onclick="copySample1Code()" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <!-- <pre id="aframe-code" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;"> -->
+        <pre id="sample1-html" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+  &lt;!DOCTYPE html&gt;
+  &lt;html&gt;
+  &lt;head&gt;
+      &lt;meta charset="UTF-8"/&gt;
+      &lt;script src="https://aframe.io/releases/1.6.0/aframe.min.js"&gt;&lt;/script&gt;
+      &lt;script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"&gt;&lt;/script&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+      &lt;a-scene stats loading-screen="dotsColor: gray; backgroundColor: lightgray"&gt;
+      
+          &lt;a-entity environment="preset: default;"&gt;&lt;/a-entity&gt;
+          &lt;a-entity id="player"&gt;
+            &lt;a-entity id="camera" camera position="0 1.6 0" wasd-controls look-controls&gt;&lt;/a-entity&gt;
+          &lt;/a-entity&gt;
+          &lt;a-box position="0 1 -3" rotation="0 0 0" width="1" height="1" depth="1" color="green"&gt;&lt;/a-box&gt;
+
+      &lt;/a-scene&gt;
+  &lt;/body&gt;
+  &lt;/html&gt;
+  </code>
+  </pre>
+        </div>
+        <script>
+      function copySample1Code() {
+        const code = document.getElementById('sample1-html').innerText;
+        navigator.clipboard.writeText(code).then(function() {
+          alert('コードをコピーしました！');
+        }, function() {
+          alert('コピーに失敗しました');
+        });
+      }
+    </script>
+    <!-- <p>A-Frameでは、基本的にタグを組み合わせてVR空間を作っていきます.</p>
+     <ul>
+            <li><strong>&lt;a-scene&gt;&lt;/a-scene&gt;</strong>: A-Frameの中でも最も重要なタグ。VR空間そのものを表すタグになります。様々なオブジェクトは、このタグの中に記述していく事になります。</li>
+            <li><strong>&lt;a-sky&gt;&lt;/a-sky&gt;</strong>: VR空間の背景の色を決めるタグ。</li>
+            <li><strong>&lt;a-camera&gt;&lt;/a-camera&gt;</strong>: カメラの位置や向きを設定するタグ。</li>
+      </ul> -->
+  
+        <p>ファイルを保存したら、エディターの上にマウスを置き、右クリックして"Open With Live Server"を選択します．</p>
+        <img src="./run_file.png" alt="A-Frame Example" style="max-width: 40%; height: auto;">
+        <p>そすると、ブラウザが起動し、下記のように仮想空間が表示されます。</p>
+        <img src="./part1_output_1.png" alt="A-Frame Example" style="max-width: 100%; height: auto;">
+        <p>画面左上に表示されている"stats"に注目してください。ここには、A-Frameの実行に関する情報が表示されています。</p>
+        <p>マウスのドラッグでカメラの方向制御、キーボードの"WASD"でVR空間を移動する事もできるので試してみましょう。</p>
+    </section>
+    <section id="chapter5">
+      <h2>プログラムの解説</h2>
+        <p></p>ここでは、先ほど作成したindex.htmlファイルの内容を詳しく見ていきます。htmlファイルはタグというものから構成されます。タグは&lt;tag_name&gt;.... &lt;/tag_name&gt;の形式で記述されます。</p>
+        <p>まず、A-Frameのライブラリを読み込むために、&lt;head&gt;タグ内にAFrameコンポネント <span style="color:red;">aframe.min.js</span>とAFrame環境コンポネント<span style="color:red;">aframe-environment-component.min.js</span>を追加します。</p>
+        <pre class="language-markup">
+        &lt;head&gt;
+              &lt;meta charset="UTF-8"/&gt;
+              &lt;script src="https://aframe.io/releases/1.6.0/aframe.min.js"&gt;&lt;/script&gt;
+              &lt;script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"&gt;&lt;/script&gt;
+        &lt;/head&gt;
+        </pre>
+        <p>次に、&lt;a-scene&gt;タグを使って仮想空間を定義します。このタグは、A-Frameの中でも最も重要なタグで、VR空間そのものを表します。</p>
+        <pre class="language-markup">
+          &lt;a-scene stats loading-screen="dotsColor: gray; backgroundColor: lightgray"&gt;&lt;/a-scene&gt;
+        </pre>
+        <p>次に、&lt;a-entity&gt;タグを使って環境を設定します。ここでは、&lt;a-entity environment&gt;を使用して、
+        環境のプリセットを"デフォルト"に設定しています。</p>
+        <pre class="language-markup">
+          &lt;a-entity environment="preset: default;"&gt;&lt;/a-entity&gt;
+        </pre>
+        <p>次に、&lt;a-camera&gt;タグを使ってカメラの位置と向きを設定します。</p>
+        <pre class="language-markup">
+           &lt;a-entity id="player"&gt;
+            &lt;a-entity id="camera" camera position="0 1.6 0" wasd-controls look-controls&gt;&lt;/a-entity&gt;
+          &lt;/a-entity&gt;
+        </pre>
+        <p>ここでは、カメラの位置（position属性）を(0, 1.6, 0)に設定しています。これは、カメラが地面から1.6メートルの高さにあることを意味します。</p>
+        <p>最後に、&lt;a-box&gt;タグを使って立方体を配置します。オブジェクトの位置やサイズ、色を対応する属性（アトリビュート）で指定することができます。</p>
+        <pre class="language-markup">
+          &lt;a-box position="0 1 -3" width="1" height="1" depth="1" color="blue"&gt;&lt;/a-box&gt;
+        </pre>
+        <p>ここでは、立方体の位置(position)を(0, 1, -3)に設定し、幅（width）を1、高さ（height）を1、奥行き（depth）を1、色（color）を青にしています。</p>
+    </section>
+   
+    <section id="chapter7">
+        <h2>様々なオブジェクトを配置してみよう</h2>
+        <p>次に、様々なオブジェクトを配置してみましょう。以下のコードをコピーして、index.htmlファイルのa-boxタグの後に追加してください。</p>
+        <div style="position:relative;">
+      <button onclick="copyCode('sample2-html')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <pre id="sample2-html" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+          &lt;a-sphere position="-2 1 -3" radius="0.5" color="red"&gt;&lt;/a-sphere&gt;
+          &lt;a-cylinder position="2 1 -3" radius="0.5" height="1.5" color="blue"&gt;&lt;/a-cylinder&gt;
+          &lt;a-cone position="4 1 -3" radius-bottom="0.5" height="1.5" color="orange"&gt;&lt;/a-cone&gt;
+      </code>
+      </pre>
+        </div>
+      <p>上記のコード追加して、index.htmlファイルを保存してください。以下のように仮想空間にオブジェクトが配置されるかを確認してください。</p>
+        <img src="./multiple_object_example.png" alt="A-Frame Example" style="max-width: 60%; height: auto;">
+        <p>このように、様々なオブジェクトを配置することができます。オブジェクトの位置や色、サイズを変更して、自由に仮想空間をカスタマイズしてみましょう。</p>
+    </section>
+    <div style="margin: 2em 0 1em 0; text-align:right;">
+    <a href="index2.html" style="display:inline-block; padding:10px 24px; background:#2980b9; color:#fff; border-radius:6px; text-decoration:none; font-size:1.1em; font-weight:bold; box-shadow:0 2px 8px #eee;">第2章へ</a>
+    </div>
+</body>
+</html>

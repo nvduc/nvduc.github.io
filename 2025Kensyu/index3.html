@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025産業教育研修会</title>
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        body { font-family: Arial, sans-serif; margin: 120px 15vw 120px 15vw; background: #f9f9f9; }
+        h1 { color: #2c3e50; }
+        h2 { color: #34495e; margin-top: 2em; }
+        ul.toc { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px #eee; }
+        ul.toc li { margin: 10px 0; }
+        a { color: #2980b9; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        section { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 2em; box-shadow: 0 2px 8px #eee; }
+    </style>
+</head>
+<body>
+ 
+    <h1>第3章 VR太陽系図鑑を作成する</h1>
+    <p>第3章では、太陽系図鑑を作成するための手順を説明します。各惑星の位置や大きさは実際の太陽系に基づいて設定します。フォルダの中にあるtaiyokei.htmlファイルを使用します。</p>
+    <h2>目次</h2>
+    <ul class="toc">
+        <li><a href="#chapter1">テクスチャ画像を用意する</a></li>
+        <li><a href="#chapter2">背景画像を設定する</a></li>
+        <li><a href="#chapter3">太陽モデルを作成する</a></li>
+        <li><a href="#chapter4">地球を追加する</a></li>
+        <li><a href="#chapter5">他の惑星を追加する</a></li>
+    </ul>
+    <script>
+      function copyCode(codeId) {
+        const code = document.getElementById(codeId).innerText;
+        navigator.clipboard.writeText(code).then(function() {
+          alert('コードをコピーしました！');
+        }, function() {
+          alert('コピーに失敗しました');
+        });
+      }
+     </script>
+    <section id="chapter1">
+
+        <h2>テクスチャ画像を用意する</h2>
+        <p>太陽と惑星のテクスチャ画像はassetsフォルダに入っています。本研修では、NASAが提供する画像を使用します。</p>
+        <!-- insert sun.jpg and earth.jpg side by side-->
+        <div style="flex:1; min-width:220px; max-width:40%; text-align: center;">
+            <img src="./sun.jpg" alt="VR Button" style="width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+            <div style="color:#888; font-size:0.95em;">太陽のテクスチャ画像</div>
+        </div>
+        <div style="flex:1; min-width:220px; max-width:40%; text-align: center;">
+            <img src="./earth.jpg" alt="VR Button" style="width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+            <div style="color:#888; font-size:0.95em;">地球のテクスチャ画像</div>
+        </div>
+
+        <p>こちらの画像を下記のようにa-assetsタグを使って読み込みます。</p>
+        <div style="position:relative;">
+         <button onclick="copyCode('chapter3-1')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+      <!-- <pre id="aframe-code" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;"> -->
+        <pre id="chapter3-1" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+          &lt;a-assets&gt; 
+            &lt;img id="skyTexture" src="assets/milkyway.jpg"&gt;     &lt;!-- 銀河系の画像 --&gt;
+            &lt;img id="earthTexture" src="assets/earth.jpg"&gt;      &lt;!-- 地球の画像 --&gt;
+            &lt;img id="sunTexture" src="assets/sun.jpg"&gt;          &lt;!-- 太陽の画像 --&gt;
+            &lt;img id="mercuryTexture" src="assets/mercury.jpg"&gt;  &lt;!-- 水星の画像 --&gt;
+            &lt;img id="venusTexture" src="assets/venus.jpg"&gt;      &lt;!-- 金星の画像 --&gt;
+            &lt;img id="marsTexture" src="assets/mars.jpg"&gt;        &lt;!-- 火星の画像 --&gt;
+            &lt;img id="jupyterTexture" src="assets/jupiter.jpg"&gt;  &lt;!-- 木製の画像 --&gt;
+            &lt;img id="saturnTexture" src="assets/saturn.jpg"&gt;    &lt;!-- 土星の画像 --&gt;
+            &lt;img id="uranusTexture" src="assets/uranus.jpg"&gt;    &lt;!-- 天王星の画像 --&gt;
+            &lt;img id="neptuneTexture" src="assets/neptune.jpg"&gt;  &lt;!-- 海王星の画像 --&gt;
+          &lt;/a-assets&gt;
+        </code>
+        </pre>
+        </div>
+        <p>各画像はidが設定されて, それを使ってプログラム内で参照できます。例えば、太陽のテクスチャ画像は<a href="#sunTexture">sunTexture</a>というidで参照できます。</p>
+        <p>上記のコードをtaiyokei.htmlファイルのa-sceneタグ内に追加してください。</p>
+        <section id="chapter2">
+          <h2>背景画像を設定する</h2>
+        <p>次に、太陽系の背景を銀河系の画像(skyTexture)をa-skyタグを使って設定します。背景画像はsrc属性で指定します。</p>
+         <div style="position:relative;">
+         <button onclick="copyCode('chapter3-20')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+        <pre id="chapter3-20" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+        &lt;a-sky src="#skyTexture"&gt;&lt;/a-sky&gt;
+        </code>
+        </pre>
+        </div>
+        </section>
+        <section id="chapter3">
+          <h2>太陽モデルを作成する</h2>
+        <p>次に、太陽のモデルをa-sphereタグで作ります。太陽は半径が3の球体として表現し、テクスチャ画像はsunTextureを使って貼り付けます。更に、animation属性を使って自転アニメーションを追加します。</p>
+        <div style="position:relative;">
+         <button onclick="copyCode('chapter3-2')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+        <pre id="chapter3-2" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+          &lt;a-sphere <span style="color:greenyellow;">position="-2 -5 -15" radius="3" src="#sunTexture"</span>  <span style="color:red;">animation="property: rotation; to: 0 360 0; loop:true;dur: 10000"; easing: linear"</span>&gt;&lt;/a-sphere&gt;
+        </code>
+        </pre>
+        </div>
+        <h3>animation属性の詳細</h3>
+        <table style="width:100%; border-collapse:collapse; margin-top:1em;">
+          <thead style="background:#f4f4f4;">
+            <tr>
+              <th style="border:1px solid #ccc; padding:8px;">属性</th>
+              <th style="border:1px solid #ccc; padding:8px;">説明</th>
+              <th style="border:1px solid #ccc; padding:8px;">記述例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">property</td>
+              <td style="border:1px solid #ccc; padding:8px;">アニメーションの種類（回転，平行移動など）</td>
+              <td style="border:1px solid #ccc; padding:8px;">property: rotation</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">to</td>
+              <td style="border:1px solid #ccc; padding:8px;">アニメーション終了時のターゲット値</td>
+              <td style="border:1px solid #ccc; padding:8px;">to: 0 360 0</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">loop</td>
+              <td style="border:1px solid #ccc; padding:8px;">アニメーションを繰り返す回数 true: ずっと 繰り返す</td>
+              <td style="border:1px solid #ccc; padding:8px;">loop: true</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">dur </td>
+              <td style="border:1px solid #ccc; padding:8px;">アニメーションの持続時間（ミリ秒）</td>
+              <td style="border:1px solid #ccc; padding:8px;">dur: 10000</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">easing</td>
+              <td style="border:1px solid #ccc; padding:8px;">アニメーションのイージング関数</td>
+              <td style="border:1px solid #ccc; padding:8px;">easing: linear</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>太陽の自転周期をミリ秒単位でdur属性を使って設定できます。上記の例では10秒間で1回転するように設定しています。ここまでで太陽のモデルが完成しました。taiyokei.htmlファイルを保存して、太陽が自転していることを確認してみましょう。</p>
+               <!-- insert demo video -->
+      <div style="text-align: center; margin: 24px 0;">
+        <video controls style="max-width: 50%; height: auto;">
+          <source src="./chapter3_1_short.mp4" type="video/mp4">
+          お使いのブラウザは動画タグに対応していません。
+        </video>
+        <div style="color:#888; font-size:0.95em;">太陽のモデル</div>
+      </div>
+    </section>
+    <section id="chapter4">
+      <h2>地球を追加する</h2>
+      <p>次に、地球を追加していきます。地球のモデルも太陽と同様にa-sphereタグを使って作成します。ただし、地球は太陽を中心に回るため、自転に加えて公転も再現する必要があります。そのため，下記のようにa-entityタグを使って各惑星をa-sphereタグで囲んで実現します。</p>
+      <div style="position:relative;">
+         <button onclick="copyCode('chapter3-3')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+        <pre id="chapter3-3" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+        &lt;a-entity 
+            position="-2 -5 -15" 
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 365000; easing: linear">
+            &lt;a-sphere 
+                position="10 0 0" 
+                radius="1" 
+                src="#earthTexture"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 1000; easing: linear" &gt;
+            &lt;/a-sphere&gt;
+        &lt;/a-entity&gt;
+        </code>
+        </pre>
+        </div>
+      <p>上記のコードでは，a-entityタグで地球の公転軌道を定義し、その中にa-sphereタグで地球を配置しています。公転のアニメーションはa-entityタグに設定し、地球の自転のアニメーションはa-sphereタグに設定しています。</p>
+      <h3>公転の設定（a-entityタグ）</h3>
+       <table style="width:100%; border-collapse:collapse; margin-top:1em;">
+          <thead style="background:#f4f4f4;">
+            <tr>
+              <th style="border:1px solid #ccc; padding:8px;">属性</th>
+              <th style="border:1px solid #ccc; padding:8px;">説明</th>
+              <th style="border:1px solid #ccc; padding:8px;">記述例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">position</td>
+              <td style="border:1px solid #ccc; padding:8px;">公転の中心（太陽）の位置を設定する</td>
+              <td style="border:1px solid #ccc; padding:8px;">position="-2 -5 -15"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">animation</td>
+              <td style="border:1px solid #ccc; padding:8px;">公転アニメーションを設定する（公転周期はdur属性で設定）</td>
+              <td style="border:1px solid #ccc; padding:8px;">animation="property: rotation; to: 0 360 0; loop: true; dur: 365000; easing: linear"</td>
+            </tr>
+          </tbody>
+        </table>
+       <h3>自転の設定（a-sphereタグ）</h3>
+       <table style="width:100%; border-collapse:collapse; margin-top:1em;">
+          <thead style="background:#f4f4f4;">
+            <tr>
+              <th style="border:1px solid #ccc; padding:8px;">属性</th>
+              <th style="border:1px solid #ccc; padding:8px;">説明</th>
+              <th style="border:1px solid #ccc; padding:8px;">記述例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">position</td>
+              <td style="border:1px solid #ccc; padding:8px;">地球の初期位置を設定する</td>
+              <td style="border:1px solid #ccc; padding:8px;">position="10 0 0"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">radius</td>
+              <td style="border:1px solid #ccc; padding:8px;">地球の半径を設定する</td>
+              <td style="border:1px solid #ccc; padding:8px;">radius="1"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">src</td>
+              <td style="border:1px solid #ccc; padding:8px;">地球のテクスチャ画像を設定する</td>
+              <td style="border:1px solid #ccc; padding:8px;">src="#earthTexture"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">animation</td>
+              <td style="border:1px solid #ccc; padding:8px;">自転アニメーションを設定する（自転周期はdur属性で設定）</td>
+              <td style="border:1px solid #ccc; padding:8px;">animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear"</td>
+            </tr>
+          </tbody>
+        </table>
+      <p>上記のコードをtaiyokei.htmlファイルに追加して、地球の公転と自転を確認してみましょう。</p>
+                 <!-- insert demo video -->
+      <div style="text-align: center; margin: 24px 0;">
+        <video controls style="max-width: 50%; height: auto;">
+          <source src="./sun_earth_short.mp4" type="video/mp4">
+          お使いのブラウザは動画タグに対応していません。
+        </video>
+        <div style="color:#888; font-size:0.95em;">地球を太陽の周りを公転する</div>
+      </div>
+      次に，地球の軌道を<a-ring>タグを使って描きます。a-ringタグは円環を描くためのタグで、地球の公転軌道を表現するのに適しています。上記で作成した地球の位置を基準に、次のように軌道を描きます。
+      <div style="position:relative;">
+         <button onclick="copyCode('chapter3-4')" style="position:absolute; top:8px; right:8px; z-index:2; padding:6px 12px; font-size:0.95em; border-radius:4px; border:1px solid #ccc; background:#e0e0e0; cursor:pointer;">コピー</button>
+        <pre id="chapter3-4" class="language-markup" style="border-radius:6px; padding:16px; overflow-x:auto; font-size:1em; border:1px solid #e0e0e0; margin-top:0; background:#2d2d2d; color:#ccc;">
+        <code class="language-markup">
+        &lt;a-ring 
+            position="-2 -5 -15" 
+            color="white" 
+            rotation="-90 0 0" 
+            radius-inner="10" 
+            radius-outer="10.1" 
+            roughness="0" 
+            segments-phi="100" 
+            segments-theta="100">
+        &lt;/a-ring&gt;
+        </code>
+        </pre>
+        </div>
+        <h3>軌道の設定（a-ringタグ）</h3>
+       <table style="width:100%; border-collapse:collapse; margin-top:1em;">
+          <thead style="background:#f4f4f4;">
+            <tr>
+              <th style="border:1px solid #ccc; padding:8px;">属性</th>
+              <th style="border:1px solid #ccc; padding:8px;">説明</th>
+              <th style="border:1px solid #ccc; padding:8px;">記述例</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">position</td>
+              <td style="border:1px solid #ccc; padding:8px;">軌道の中心（太陽の位置）</td>
+              <td style="border:1px solid #ccc; padding:8px;">position="-2 -5 -15"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">color</td>
+              <td style="border:1px solid #ccc; padding:8px;">軌道の色を設定する</td>
+              <td style="border:1px solid #ccc; padding:8px;">color="white"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">rotation</td>
+              <td style="border:1px solid #ccc; padding:8px;">回転を設定する</td>
+              <td style="border:1px solid #ccc; padding:8px;">rotation="-90 0 0"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;"><span style="color:red;">radius-inner</span></td>
+              <td style="border:1px solid #ccc; padding:8px;"><span style="color:red;">内半径を設定する（地球から太陽までの距離）</span></td>
+              <td style="border:1px solid #ccc; padding:8px;"><span style="color:red;">radius-inner="10"</span></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;"><span style="color:red;">radius-outer</span></td>
+              <td style="border:1px solid #ccc; padding:8px;"><span style="color:red;">外半径を設定する（地球から太陽までの距離+0.1）</span></td>
+              <td style="border:1px solid #ccc; padding:8px;"><span style="color:red;">radius-outer="10.1"</span></td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">roughness</td>
+              <td style="border:1px solid #ccc; padding:8px;">表面の粗さを設定する</td>
+              <td style="border:1px solid #ccc; padding:8px;">roughness="0"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">segments-phi</td>
+              <td style="border:1px solid #ccc; padding:8px;">円形を近似する多角形の分割数（赤道方向）</td>
+              <td style="border:1px solid #ccc; padding:8px;">segments-phi="100"</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">segments-theta</td>
+              <td style="border:1px solid #ccc; padding:8px;">円形を近似する多角形の分割数（極方向）</td>
+              <td style="border:1px solid #ccc; padding:8px;">segments-theta="100"</td>
+            </tr>
+          </tbody>
+        </table>
+      <p>軌道の内半径（radius-inner）は地球から太陽までの距離で設定し、外半径（radius-outer）は地球から太陽までの距離+0.1で設定します。</p>
+      <p>上記のコードをtaiyokei.htmlファイルに追加して、地球の軌道を確認してみましょう。</p>
+      <!-- insert demo video -->
+      <div style="text-align: center; margin: 24px 0;">
+        <video controls style="max-width: 50%; height: auto;">
+          <source src="./sun_earth_trajectory_short.mp4" type="video/mp4">
+          お使いのブラウザは動画タグに対応していません。
+        </video>
+        <div style="color:#888; font-size:0.95em;">地球の軌道</div>
+      </div>
+    </section>
+    <section id="chapter5">
+      <h2>第5章: 他の惑星を追加する</h2>
+      <p>下記の表は、地球のデータを基準にした太陽系の他の惑星の情報を示しています。これらのデータを使って、他の惑星も同様に追加していきますしょう。</p>
+      <table style="width:100%; border-collapse:collapse; margin-top:1em;">
+          <thead style="background:#f4f4f4;">
+            <tr>
+              <th style="border:1px solid #ccc; padding:8px;">惑星名</th>
+              <th style="border:1px solid #ccc; padding:8px;">半径</th>
+              <th style="border:1px solid #ccc; padding:8px;">テクスチャ画像</th>
+              <th style="border:1px solid #ccc; padding:8px;">位置</th>
+              <th style="border:1px solid #ccc; padding:8px;">公転周期</th>
+              <th style="border:1px solid #ccc; padding:8px;">自転周期</th>
+              <th style="border:1px solid #ccc; padding:8px;">軌道の内半径</th>
+              <th style="border:1px solid #ccc; padding:8px;">軌道の外半径</th>
+            </tr>
+          </thead>
+          <tbody>
+             <tr>
+              <td style="border:1px solid #ccc; padding:8px;">地球</td>
+              <td style="border:1px solid #ccc; padding:8px;">1</td>
+              <td style="border:1px solid #ccc; padding:8px;">earthTexture</td>
+              <td style="border:1px solid #ccc; padding:8px;">0 0 10</td>
+              <td style="border:1px solid #ccc; padding:8px;">365000</td>
+              <td style="border:1px solid #ccc; padding:8px;">1000</td>
+              <td style="border:1px solid #ccc; padding:8px;">10.0</td>
+              <td style="border:1px solid #ccc; padding:8px;">10.1</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">水星</td>
+              <td style="border:1px solid #ccc; padding:8px;">0.4</td>
+              <td style="border:1px solid #ccc; padding:8px;">mercuryTexture</td>
+              <td style="border:1px solid #ccc; padding:8px;">0 0 3.9</td>
+              <td style="border:1px solid #ccc; padding:8px;">87965</td>
+              <td style="border:1px solid #ccc; padding:8px;">58810</td>
+              <td style="border:1px solid #ccc; padding:8px;">3.9</td>
+              <td style="border:1px solid #ccc; padding:8px;">4.0</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">金星</td>
+              <td style="border:1px solid #ccc; padding:8px;">0.9</td>
+              <td style="border:1px solid #ccc; padding:8px;">venusTexture</td>
+              <td style="border:1px solid #ccc; padding:8px;">0 0 7.2</td>
+              <td style="border:1px solid #ccc; padding:8px;">224475</td>
+              <td style="border:1px solid #ccc; padding:8px;">243683</td>
+              <td style="border:1px solid #ccc; padding:8px;">7.2</td>
+              <td style="border:1px solid #ccc; padding:8px;">7.3</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">火星</td>
+              <td style="border:1px solid #ccc; padding:8px;">0.5</td>
+              <td style="border:1px solid #ccc; padding:8px;">marsTexture</td>
+              <td style="border:1px solid #ccc; padding:8px;">0 0 15.2</td>
+              <td style="border:1px solid #ccc; padding:8px;">686565</td>
+              <td style="border:1px solid #ccc; padding:8px;">1028</td>
+              <td style="border:1px solid #ccc; padding:8px;">15.2</td>
+              <td style="border:1px solid #ccc; padding:8px;">15.3</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">木星</td>
+              <td style="border:1px solid #ccc; padding:8px;">11.2</td>
+              <td style="border:1px solid #ccc; padding:8px;">jupyterTexture</td>
+              <td style="border:1px solid #ccc; padding:8px;">0 0 52.0</td>
+               <td style="border:1px solid #ccc; padding:8px;">4329630</td>
+              <td style="border:1px solid #ccc; padding:8px;">414</td>
+              <td style="border:1px solid #ccc; padding:8px;">52.0</td>
+              <td style="border:1px solid #ccc; padding:8px;">52.1</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">土星</td>
+              <td style="border:1px solid #ccc; padding:8px;">9.4</td>
+              <td style="border:1px solid #ccc; padding:8px;">saturnTexture</td>
+              <td style="border:1px solid #ccc; padding:8px;">0 0 95.8 </td>
+               <td style="border:1px solid #ccc; padding:8px;">10751805</td>
+              <td style="border:1px solid #ccc; padding:8px;">427</td>
+              <td style="border:1px solid #ccc; padding:8px;">95.8</td>
+              <td style="border:1px solid #ccc; padding:8px;">95.9</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">天王星</td>
+              <td style="border:1px solid #ccc; padding:8px;">4.0</td>
+              <td style="border:1px solid #ccc; padding:8px;">uranusTexture</td>
+              <td style="border:1px solid #ccc; padding:8px;">0 0 192.0</td>
+              <td style="border:1px solid #ccc; padding:8px;">30664015</td>
+              <td style="border:1px solid #ccc; padding:8px;">720</td>
+              <td style="border:1px solid #ccc; padding:8px;">192.0</td>
+              <td style="border:1px solid #ccc; padding:8px;">192.1</td>
+            </tr>
+            <tr>
+              <td style="border:1px solid #ccc; padding:8px;">海王星</td>
+              <td style="border:1px solid #ccc; padding:8px;">3.9</td>
+              <td style="border:1px solid #ccc; padding:8px;">neptuneTexture</td>
+              <td style="border:1px solid #ccc; padding:8px;">0 0 300.5</td>
+              <td style="border:1px solid #ccc; padding:8px;">60148350</td>
+              <td style="border:1px solid #ccc; padding:8px;">673</td>
+              <td style="border:1px solid #ccc; padding:8px;">300.5</td>
+              <td style="border:1px solid #ccc; padding:8px;">300.6</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <div style="flex:1; max-width:100%; text-align: center;">
+            <img src="./solarsystem_full.png" alt="VR Button" style="width: 100%; height: auto; display: block; margin: 0 auto 8px auto;">
+            <div style="color:#888; font-size:0.95em;">VR太陽系図鑑（完成版）</div>
+        </div>
+      <!-- insert buttons side by side to go to index.html and index3.html -->
+      <div style="display: flex; justify-content: center; gap: 32px; margin: 2em 0 1em 0;">
+        <a href="index2.html" style="display:inline-block; padding:10px 24px; background:#2980b9; color:#fff; border-radius:6px; text-decoration:none; font-size:1.1em; font-weight:bold; box-shadow:0 2px 8px #eee;">第2章へ</a>
+      </div>
+</body>
+</html>
