@@ -166,7 +166,7 @@
 
 
     let evaluationCount = 0;
-    var video_path = "video_JP/"
+    var video_path = "video_VN/v"
 // --- Video file list (replace with your server video URLs) ---
     const videoList = [
   { title: "Video 1", src: video_path+"1.mp4" },
@@ -367,15 +367,41 @@
   { title: "Video 196", src: video_path + "196.mp4" },
   { title: "Video 197", src: video_path + "197.mp4" }
 ];
+    
+    // --- Shuffle function to generate random numbers from 0 to 99 ---
+    function shuffleNumbers(start, end) {
+      const numbers = [];
+      for (let i = start; i <= end; i++) {
+        numbers.push(i);
+      }
+      
+      // Fisher-Yates shuffle algorithm
+      for (let i = numbers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+      }
+      
+      return numbers;
+    }
 
-    // --- 各遅延パターンごとに使う動画インデックスをCSVから読み込む ---
-    let PREDEFINED_VIDEO_INDEXES = [
-    [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19],
-    [20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39],
-    [40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59],
-    [60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79],
-    [80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99]];
+    // --- Generate shuffled video indexes for each pattern ---
+    function generateShuffledVideoIndexes() {
+      const shuffledIndexes = [];
+      const allNumbers = shuffleNumbers(0, 99);
+      
+      // Split into 5 groups of 20 videos each
+      for (let i = 0; i < 5; i++) {
+        const start = i * 20;
+        const end = start + 20;
+        shuffledIndexes.push(allNumbers.slice(start, end));
+      }
+      
+      return shuffledIndexes;
+    }
 
+    // --- 各遅延パターンごとに使う動画インデックスをシャッフル ---
+    let PREDEFINED_VIDEO_INDEXES = generateShuffledVideoIndexes();
+    console.log('Predefined video indexes:', PREDEFINED_VIDEO_INDEXES);
     let VIDEO_SWITCH_DELAYS = [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -806,7 +832,7 @@ function logPlayTime(index) {
   console.log("now:", now, "playStart:", playStart, "index:", index, now-playStart, playTimes[index]);
   playTimes[index] += now - playStart;
   logAndBuffer(
-    `Video ${cnt} (${selectedVideos[index].src}) play time: ${playTimes[index] / 1000}s`
+    `Video ${PREDEFINED_VIDEO_INDEXES[evaluationCount][index]}  play time: ${playTimes[index] / 1000}s`
   );
   playStart = now;
   cnt++;
