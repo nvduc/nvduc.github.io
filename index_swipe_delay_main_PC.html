@@ -120,12 +120,14 @@
     <h1 style="color:#fff;margin-bottom:32px;">Thank you for participating!</h1>
     <p style="color:#fff;font-size:1.2rem;margin-bottom:32px;">You have finished watching all videos.</p>
     <button id="download-log-btn-finish" style="font-size:1.2rem;padding:12px 32px;border-radius:8px;border:none;background:#222;color:#fff;cursor:pointer;">Download Log</button>
+  <!-- ...existing code... -->
     <div style="margin-top:32px;color:#fff;font-size:1.1rem;text-align:center;">
       Please upload your downloaded log file to:<br>
       <a href="https://drive.google.com/drive/folders/1gcJidjtfxKTOjakc0fy3BrnshTZIS3BV?usp=sharing" target="_blank" style="color:#4af;text-decoration:underline;">
         https://drive.google.com/drive/folders/1gcJidjtfxKTOjakc0fy3BrnshTZIS3BV?usp=sharing
       </a>
     </div>
+    <button id="goto-test2-btn" style="font-size:1.2rem;padding:12px 32px;border-radius:8px;border:none;background:#0a74ff;color:#fff;cursor:pointer;margin-top:32px;">Go to Second Test</button>
   </div>
   <!-- ★ 評価ページを追加 -->
 <div id="score-page" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:20002;flex-direction:column;justify-content:center;align-items:center;">
@@ -790,6 +792,14 @@ scoreForm.onsubmit = function(e) {
   a.click();
   URL.revokeObjectURL(url);
 };
+
+  // Handle click for the new test2 button
+  const gotoTest2Btn = document.getElementById('goto-test2-btn');
+  if (gotoTest2Btn) {
+    gotoTest2Btn.onclick = function() {
+      window.location.href = 'index_swipe_delay_main_PC_test2.html';
+    };
+  }
 
 // Usage:
 //shuffleRowsInSync(PREDEFINED_VIDEO_INDEXES, VIDEO_SWITCH_DELAYS);
