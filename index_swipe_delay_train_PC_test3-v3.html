@@ -422,9 +422,9 @@ const VIEW_TIME_MS = [12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000, 12
 
    let VIDEO_SWITCH_DELAYS = [
     [0,	0,	0,	0,	0,	0],
-    [0,	2000,	0, 0,	0],
+    [0,	2000,	0, 0,	0, 0],
     [0,	0,	0,	0,	4000,	0],
-    [0,	0,	8000,	0,	0,	0],
+    [0,	0,	16000,	0,	0,	0],
     ];
     // let VIEW_TIME_MS = [5000,5000,5000,5000,5000,5000,50000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 20000, 20000, 20000, 20000, 20000, 20000, 20000]; // 各動画の視聴時間（ミリ秒）
     let VIEW_TIME_MS = [2000, 4000, 8000, 16000]; // 各動画の視聴時間（ミリ秒）
@@ -472,7 +472,7 @@ const VIEW_TIME_MS = [12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000, 12
       return arr.reduce((a, b) => a + b, 0);
     }
     // shuffleRowsInSync(PREDEFINED_VIDEO_INDEXES, VIDEO_SWITCH_DELAYS);
-    shuffleRowsInSync(VIDEO_SWITCH_DELAYS, VIEW_TIME_MS);
+    // shuffleRowsInSync(VIDEO_SWITCH_DELAYS, VIEW_TIME_MS);
     console.log('Loaded video switch delays:', VIDEO_SWITCH_DELAYS.length, [VIDEO_SWITCH_DELAYS, VIEW_TIME_MS], PREDEFINED_VIDEO_INDEXES);
     total_view_time_ms = sum(VIEW_TIME_MS)*6 + sum(VIDEO_SWITCH_DELAYS.flat());
     console.log('Total estimated view time(mins):',sum(VIEW_TIME_MS), total_view_time_ms/1000/60);
