@@ -943,10 +943,10 @@ function logPlayTime(index) {
   // If this is the last video in the round, force play time to 1000ms
   const isLastVideo = (index === playTimes.length - 1);
   let playTimeToLog = playTimes[index];
-  if (isLastVideo) {
-    playTimeToLog = 1000;
-    playTimes[index] = 1000;
-  }
+  // if (isLastVideo) {
+  //   playTimeToLog = 1000;
+  //   playTimes[index] = 1000;
+  // }
   logAndBuffer(
     `Video ${index} (${PREDEFINED_VIDEO_INDEXES[evaluationCount][index]}) play time: ${playTimeToLog / 1000}s`
   );
@@ -1098,14 +1098,20 @@ function playCurrentVideo() {
     ) {
       clearTimeout(window._swipePopupTimeout);
       document.getElementById('swipe-popup').style.display = 'none';
-      if (typeof roundViewTime === 'number' && !isNaN(roundViewTime)) {
+      // If this is the last video in the round, auto-advance after 1000ms but do NOT show popup
+      if (currentIndex === shorts.length - 1) {
+        clearTimeout(window._videoPlaybackTimeout);
+        window._videoPlaybackTimeout = setTimeout(() => {
+          logPlayTime(currentIndex);
+          showFinishPage();
+        }, 1000);
+      } else if (typeof roundViewTime === 'number' && !isNaN(roundViewTime)) {
         window._swipePopupTimeout = setTimeout(() => {
           document.getElementById('swipe-popup').style.display = 'flex';
         }, roundViewTime);
       }
     }
-    // Remove any previous auto-advance timeout
-    clearTimeout(window._videoPlaybackTimeout);
+    // Remove any previous auto-advance timeout (already handled above)
   }
 }
 
