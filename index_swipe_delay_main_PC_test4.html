@@ -1,3 +1,5 @@
+// --- Swipe lock until popup appears ---
+let swipeLocked = false;
 // === Playback time per round (ms) ===
 // Example: const VIEW_TIME_MS = [12000, 10000, 15000, ...];
 const VIEW_TIME_MS = [12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000]; // Set as needed
@@ -925,7 +927,11 @@ scoreForm.onsubmit = function(e) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `log_test4_${safeName}_${dateStr}.txt`;
+  if(test_id_list.length < TEST_SAMPLE.length) {
+    a.download = `log_test4_re_${safeName}_${dateStr}.txt`;
+  } else {
+    a.download = `log_test4_${safeName}_${dateStr}.txt`;
+  }
   a.click();
   URL.revokeObjectURL(url);
 };
@@ -1148,6 +1154,8 @@ function playCurrentVideo() {
     ) {
       clearTimeout(window._swipePopupTimeout);
       document.getElementById('swipe-popup').style.display = 'none';
+      // Lock swipe until popup appears
+      swipeLocked = true;
       // If this is the last video in the round, auto-advance after 1000ms but do NOT show popup
       if (currentIndex === shorts.length - 1) {
         clearTimeout(window._videoPlaybackTimeout);
@@ -1155,9 +1163,11 @@ function playCurrentVideo() {
           logPlayTime(currentIndex);
           showFinishPage();
         }, 1000);
+        // Do not unlock swipe for last video
       } else if (typeof roundViewTime === 'number' && !isNaN(roundViewTime)) {
         window._swipePopupTimeout = setTimeout(() => {
           document.getElementById('swipe-popup').style.display = 'flex';
+          swipeLocked = false;
         }, roundViewTime);
       }
     }
@@ -1167,14 +1177,16 @@ function playCurrentVideo() {
 
 // touchend/mouseupで次動画に切り替えた直後に再生
 function handleSwipe(deltaY) {
-      // Hide popup on swipe
-      clearTimeout(window._swipePopupTimeout);
-      document.getElementById('swipe-popup').style.display = 'none';
-      if (isTouch) {
-        deltaY = -deltaY;
-      } else if (mouseDown) {
-        deltaY = -deltaY;
-      }
+  // Prevent swipe if locked
+  if (swipeLocked) return;
+  // Hide popup on swipe
+  clearTimeout(window._swipePopupTimeout);
+  document.getElementById('swipe-popup').style.display = 'none';
+  if (isTouch) {
+    deltaY = -deltaY;
+  } else if (mouseDown) {
+    deltaY = -deltaY;
+  }
   if (Math.abs(deltaY) > 5) {
     const delay = getCurrentDelay();
     if (deltaY < 0 && currentIndex < shorts.length - 1) {
