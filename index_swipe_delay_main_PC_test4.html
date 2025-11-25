@@ -1,3 +1,20 @@
+// --- Rest period logic ---
+function showRestPage(callback) {
+  const restPage = document.getElementById('rest-page');
+  restPage.style.display = 'flex';
+  let seconds = 60;
+  const timerDiv = document.getElementById('rest-timer');
+  timerDiv.textContent = `Time left: ${seconds}s`;
+  const interval = setInterval(() => {
+    seconds--;
+    timerDiv.textContent = `Time left: ${seconds}s`;
+    if (seconds <= 0) {
+      clearInterval(interval);
+      restPage.style.display = 'none';
+      if (callback) callback();
+    }
+  }, 1000);
+}
 // --- Swipe lock until popup appears ---
 let swipeLocked = false;
 // === Playback time per round (ms) ===
@@ -154,6 +171,13 @@ const VIEW_TIME_MS = [12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000, 12
       </a>
     </div>
   </div>
+  <!-- Rest period screen -->
+  <div id="rest-page" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:30000;flex-direction:column;justify-content:center;align-items:center;">
+    <h1 style="color:#fff;margin-bottom:32px;">Rest Period</h1>
+    <p style="color:#fff;font-size:1.5rem;">Please take a 3-minute break.<br>After the break, press the resume button below to continue.</p>
+    <div id="rest-timer" style="color:#fff;font-size:2rem;margin-top:24px;"></div>
+    <button id="resume-btn" style="display:none;margin-top:32px;font-size:1.5rem;padding:16px 48px;border-radius:12px;border:none;background:#ff0000;color:#fff;cursor:pointer;">Resume</button>
+  </div>
   <!-- ★ 評価ページを追加 -->
 <div id="score-page" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:20002;flex-direction:column;justify-content:center;align-items:center;">
   <h1 style="color:#fff;margin-bottom:32px;">Voting</h1>
@@ -181,6 +205,30 @@ const VIEW_TIME_MS = [12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000, 12
 
   <script>
     // --- Logging utility ---
+
+    // --- Rest period logic (moved here for scope) ---
+    function showRestPage(callback) {
+      const restPage = document.getElementById('rest-page');
+      const resumeBtn = document.getElementById('resume-btn');
+      restPage.style.display = 'flex';
+      resumeBtn.style.display = 'none';
+      let seconds = 60*3;
+      const timerDiv = document.getElementById('rest-timer');
+      timerDiv.textContent = `Time left: ${seconds}s`;
+      const interval = setInterval(() => {
+        seconds--;
+        timerDiv.textContent = `Time left: ${seconds}s`;
+        if (seconds <= 0) {
+          clearInterval(interval);
+          resumeBtn.style.display = 'block';
+          resumeBtn.onclick = function() {
+            restPage.style.display = 'none';
+            resumeBtn.style.display = 'none';
+            if (callback) callback();
+          };
+        }
+      }, 1000);
+    }
     const logBuffer = [];
     function logAndBuffer(...args) {
       logBuffer.push(args.map(String).join(' '));
@@ -902,6 +950,20 @@ scoreForm.onsubmit = function(e) {
   evaluationCount++;
   logAndBuffer(`ACR Score [${evaluationCount}]:`, acr);
   scoreForm.reset();
+
+
+  // Show a 3-minute rest page and countdown ONLY after the fourteenth evaluation (not before or after any other round)
+  if (evaluationCount === 14) {
+    scorePage.style.display = 'none';
+    // Show rest page and after countdown, continue to next round
+    showRestPage(() => {
+      restartPlayback();
+      setTimeout(() => {
+        playCurrentVideo();
+      }, 0);
+    });
+    return;
+  }
 
   if (evaluationCount < EVALUATION_REPEAT) {
     // もう一度再生＋評価サイクル
