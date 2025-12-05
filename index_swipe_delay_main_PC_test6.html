@@ -561,10 +561,10 @@ const VIEW_TIME_MS = [12000, 12000, 12000, 12000, 12000, 12000, 12000, 12000, 12
     console.log('Test ID list from URL or default:', test_id_list);
     let selected_test_samples = TEST_SAMPLE.filter((_, idx) => test_id_list.includes(idx+1));
     // shuffle selected_test_samples
-    for (let i = selected_test_samples.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [selected_test_samples[i], selected_test_samples[j]] = [selected_test_samples[j], selected_test_samples[i]];
-    }
+    //for (let i = selected_test_samples.length - 1; i > 0; i--) {
+    //  const j = Math.floor(Math.random() * (i + 1));
+    //  [selected_test_samples[i], selected_test_samples[j]] = [selected_test_samples[j], selected_test_samples[i]];
+    //}
     console.log('Selected test samples:', selected_test_samples);
 
     const DEFAULT_DELAY = 1000;
