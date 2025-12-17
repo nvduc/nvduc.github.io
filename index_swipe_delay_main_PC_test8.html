@@ -887,7 +887,7 @@ function showFinishPage() {
     } catch (e) {}
   });
   // 評価タイトル更新
-  scorePage.querySelector('h1').textContent = `動画の品質評価 (${evaluationCount + 1}回目)`;
+  scorePage.querySelector('h1').textContent = ``;
   updateProgressBar(); // ★ 進捗バー更新
 
   // ★ スマホで画面遷移が反映されない場合の対策
@@ -931,7 +931,7 @@ function updateProgressBar() {
   document.getElementById('progress-bar').style.width = percent + '%';
   // ★ 進捗テキストも更新
   document.getElementById('progress-text').textContent =
-    `${evaluationCount+1} / ${EVALUATION_REPEAT} 完了`;
+    `${evaluationCount+1} / ${EVALUATION_REPEAT} completed`;
 }
 
 // スコアページ送信処理
